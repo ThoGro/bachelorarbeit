@@ -1,4 +1,4 @@
-# 3.2 Implementierung einer klassischen Webanwendung
+# 3.3 Implementierung einer klassischen Webanwendung
 
 ### Beispiel-Anwendung: Bibliotheksservice
 

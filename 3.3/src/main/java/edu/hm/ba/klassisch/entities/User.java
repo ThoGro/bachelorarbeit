@@ -1,10 +1,8 @@
 package edu.hm.ba.klassisch.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 public class User implements Serializable{
@@ -15,5 +13,7 @@ public class User implements Serializable{
     private int id;
     private String username;
     private String password;
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
+    private List<Lending> lendings;
 
 }
