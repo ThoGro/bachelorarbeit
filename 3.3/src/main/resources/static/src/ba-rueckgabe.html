@@ -1,0 +1,33 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="ba-rueckgabe">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+    <paper-card>
+      <h1>Bücherrückgabe</h1>
+      Liste der ausgeliehenen Bücher des Benutzers
+      <paper-button on-click="zurueckgeben">Zurückgeben</paper-button>
+    </paper-card>
+  </template>
+
+  <script>
+    class Rueckgabe extends Polymer.Element {
+      static get is() { return 'ba-rueckgabe'; }
+
+      zurueckgeben() {
+          console.log("Zurückgeben");
+      }
+    }
+
+    window.customElements.define(Rueckgabe.is, Rueckgabe);
+  </script>
+</dom-module>

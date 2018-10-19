@@ -1,0 +1,48 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<!-- shared styles for all views -->
+<dom-module id="shared-styles">
+  <template>
+    <style>
+      :root {
+        --app-primary-color: var(--paper-blue-500);
+        --app-secondary-color: #ff6d00;
+        --app-secondary-text-color: rgba(0, 0, 0, 0.54);
+
+        --app-success-color: var(--app-primary-color);
+        --app-warning-color: var(--paper-amber-500);
+        --app-error-color: var(--paper-red-500);
+
+        --primary-color: var(--paper-blue-500);
+      }
+
+      paper-button {
+        transition: opacity 0.2s ease-in-out;
+        background-color: var(--app-primary-color);
+        background: var(--app-primary-color);
+        color: white;
+      }
+
+      paper-button.flat {
+        background-color: transparent;
+        color: var(--app-primary-color);
+      }
+
+      paper-card {
+        padding: 16px;
+        margin: 16px;
+      }
+
+      vaadin-dialog {
+        width: auto;
+        height: auto;
+      }
+
+      h1 {
+        margin: 16px 0;
+        color: #212121;
+        font-size: 22px;
+      }
+    </style>
+  </template>
+</dom-module>

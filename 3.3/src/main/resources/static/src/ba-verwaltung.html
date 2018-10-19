@@ -1,0 +1,149 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/vaadin-dialog/vaadin-dialog.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="ba-verwaltung">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <iron-ajax
+            id="postBook"
+            method="post"
+            url="/book"
+            content-type="application/json"
+            handle-as="application/json"
+            on-response="responseAdd"
+            on-error="errorAdd">
+    </iron-ajax>
+
+    <paper-card>
+      <h1>Bücherverwaltung</h1>
+      Jeweils Popup Fenster für Buch hinzufügen/löschen/bearbeiten,
+      über Eingabe validieren
+      <paper-button on-click="hinzufuegen">Hinzufügen</paper-button>
+      <paper-button on-click="loeschen">Löschen</paper-button>
+      <paper-button on-click="bearbeiten">Bearbeiten</paper-button>
+
+      <vaadin-dialog id="addBook" no-close-on-outside-click no-close-on-esc>
+        <template>
+          <h2>Buch hinzufügen</h2>
+          <paper-input label="ISBN" value="{{newisbn}}"></paper-input>
+          <paper-input label="Titel" type="text" value="{{newtitle}}"></paper-input>
+          <paper-input label="Autor" type="text" value="{{newauthor}}"></paper-input>
+          <div class="buttons layout horizontal end-justified">
+            <paper-button dialog-dismiss class="flat" on-click="_cancelAdd">Abbrechen</paper-button>
+            <paper-button dialog-confirm class="flat" on-click="_addAccept" disabled="[[!valid]]">Hinzufügen</paper-button>
+          </div>
+        </template>
+      </vaadin-dialog>
+
+      <vaadin-dialog id="deleteBook" no-close-on-outside-click no-close-on-esc>
+        <template>
+          <h2>Buch löschen</h2>
+          <p>
+            Liste mit allen Büchern, zu löschende Bücher auswählen
+          </p>
+          <div class="buttons layout horizontal end-justified">
+            <paper-button dialog-dismiss class="flat" on-click="_cancelDelete">Abbrechen</paper-button>
+            <paper-button dialog-confirm class="flat" on-click="_deleteAccept" disabled="[[!valid]]">Löschen</paper-button>
+          </div>
+        </template>
+      </vaadin-dialog>
+
+      <vaadin-dialog id="editBook" no-close-on-outside-click no-close-on-esc>
+        <template>
+          <h2>Buch bearbeiten</h2>
+          <p>
+            Sind Sie sicher, dass Sie tatsächlich ALLE Benutzer vom Wahllokal-System amelden wollen?
+            <br/> Noch nicht gespeicherte Eingaben der Benutzer werden verloren gehen.
+          </p>
+          <div class="buttons layout horizontal end-justified">
+            <paper-button dialog-dismiss class="flat" on-click="_cancelEdit">Abbrechen</paper-button>
+            <paper-button dialog-confirm class="flat" on-click="_editAccept" disabled="[[!valid]]">Bearbeiten</paper-button>
+          </div>
+        </template>
+      </vaadin-dialog>
+    </paper-card>
+  </template>
+
+  <script>
+    class Verwaltung extends Polymer.Element {
+      static get is() { return 'ba-verwaltung'; }
+      static get properties() {
+          return {
+              newisbn: String,
+              newtitle: String,
+              newauthor: String
+          }
+      }
+
+      hinzufuegen(e) {
+          console.log("Hinzufügen");
+          this.$.addBook.opened = true;
+      }
+
+      _cancelAdd(event) {
+          this.$.addBook.opened = false;
+      }
+
+      _addAccept(e) {
+          console.log("Hinzufügen Accept");
+          var body = {userid: this.newisbn, title: this.newtitle, author: this.newauthor};
+          console.log(body);
+          this.$.postBook.body = body;
+          this.$.postBook.generateRequest();
+          this.$.addBook.opened = false;
+      }
+
+      responseAdd(event) {
+          console.log(event);
+      }
+
+      errorAdd(event) {
+          console.log(event);
+          console.log(event.detail);
+          console.log(event.detail.response);
+      }
+
+      loeschen() {
+          console.log("Löschen");
+          this.$.deleteBook.opened = true;
+      }
+
+      _cancelDelete(event) {
+          this.$.deleteBook.opened = false;
+      }
+
+      _deleteAccept(e) {
+          console.log("Löschen Accept");
+          this.$.deleteBook.opened = false;
+      }
+
+      bearbeiten() {
+          console.log("Bearbeiten");
+          this.$.editBook.opened = true;
+      }
+
+      _cancelEdit(event) {
+          this.$.editBook.opened = false;
+      }
+
+      _editAccept(e) {
+          console.log("Bearbeiten Accept");
+          this.$.editBook.opened = false;
+      }
+    }
+
+    window.customElements.define(Verwaltung.is, Verwaltung);
+  </script>
+</dom-module>

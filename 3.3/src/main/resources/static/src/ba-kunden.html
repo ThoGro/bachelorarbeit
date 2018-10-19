@@ -1,0 +1,88 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/vaadin-dialog/vaadin-dialog.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="ba-kunden">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+
+                padding: 10px;
+            }
+        </style>
+
+        <iron-ajax
+                id="postUser"
+                method="post"
+                url="/user"
+                content-type="application/json"
+                handle-as="application/json"
+                on-response="responseAdd"
+                on-error="errorAdd">
+        </iron-ajax>
+
+        <paper-card>
+            <h1>Kunden verwalten</h1>
+            <paper-button on-click="hinzufuegen">Hinzufügen</paper-button>
+        </paper-card>
+
+        <vaadin-dialog id="addUser" no-close-on-outside-click no-close-on-esc>
+            <template>
+                <h2>Kunden hinzufügen</h2>
+                <paper-input label="Username" value="{{username}}"></paper-input>
+                <paper-input label="Passwort" value="{{password}}"></paper-input>
+                <div class="buttons layout horizontal end-justified">
+                    <paper-button dialog-dismiss class="flat" on-click="_cancelAdd">Abbrechen</paper-button>
+                    <paper-button dialog-confirm class="flat" on-click="_addAccept" disabled="[[!valid]]">Hinzufügen</paper-button>
+                </div>
+            </template>
+        </vaadin-dialog>
+    </template>
+
+    <script>
+        class Kunden extends Polymer.Element {
+            static get is() { return 'ba-kunden'; }
+            static get properties() {
+                return {
+                    username: String,
+                    password: String
+                }
+            }
+
+            hinzufuegen() {
+                console.log("Hinzufuegen");
+                this.$.addUser.opened = true;
+            }
+
+            _cancelAdd(event) {
+                this.$.addUser.opened = false;
+            }
+
+            _addAccept(e) {
+                console.log("Hinzufügen Accept");
+                var body = {username: this.username, password: this.password};
+                console.log(body);
+                this.$.postUser.body = body;
+                this.$.postUser.generateRequest();
+                this.$.addUser.opened = false;
+            }
+
+            responseAdd(event) {
+                console.log(event);
+            }
+
+            errorAdd(event) {
+                console.log(event);
+                console.log(event.detail);
+                console.log(event.detail.response);
+            }
+        }
+
+        window.customElements.define(Kunden.is, Kunden);
+    </script>
+</dom-module>

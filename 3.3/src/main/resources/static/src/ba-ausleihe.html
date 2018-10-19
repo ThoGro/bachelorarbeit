@@ -1,0 +1,79 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="ba-ausleihe">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+    <iron-ajax
+        auto
+        id="getBooks"
+        method="get"
+        url="/book"
+        handle-as="application/json"
+        on-response="responseBooks"
+        on-error="errorBooks">
+    </iron-ajax>
+    <paper-card>
+      <h1>Bücherausleihe</h1>
+      <template is="dom-repeat" items="{{books}}">
+        <div>
+          <paper-checkbox id="[[item.isbn]]"></paper-checkbox>
+          <paper-input disabled value="[[item.isbn]]"></paper-input>
+          <paper-input disabled value="[[item.title]]"></paper-input>
+          <paper-input disabled value="[[item.author]]"></paper-input>
+        </div>
+      </template>
+      <paper-button on-click="ausleihen">Ausleihen</paper-button>
+    </paper-card>
+  </template>
+
+  <script>
+    class Ausleihe extends Polymer.Element {
+      static get is() { return 'ba-ausleihe'; }
+      static get properties() {
+          return {
+              books: {
+                  type: Array,
+                  value: [{"isbn":"1234567890","title":"Buch1","author":"Author1"},
+                      {"isbn":"0987654321","title":"Buch2","author":"Author2"},
+                      {"isbn":"1234560000","title":"Buch3","author":"Author3"}
+                  ]
+              }
+          }
+      }
+
+      ausleihen() {
+          console.log("Ausleihen");
+          var checkboxes = this.shadowRoot.querySelectorAll('paper-checkbox');
+          checkboxes.forEach((checkbox) => {
+             if (checkbox.checked) {
+                 console.log(checkbox.id, " wird ausgeliehen");
+             }
+          });
+      }
+
+      responseBooks(event) {
+          //console.log(JSON.parse(event.detail.response)._embedded.books);
+          console.log(event);
+          console.log(event.detail.response);
+      }
+
+      errorBooks(event) {
+          console.log(event);
+      }
+    }
+
+    window.customElements.define(Ausleihe.is, Ausleihe);
+  </script>
+</dom-module>
