@@ -19,7 +19,7 @@
         auto
         id="getBooks"
         method="get"
-        url="/book"
+        url="http://localhost:8080/book"
         handle-as="application/json"
         on-response="responseBooks"
         on-error="errorBooks">
@@ -43,13 +43,7 @@
       static get is() { return 'ba-ausleihe'; }
       static get properties() {
           return {
-              books: {
-                  type: Array,
-                  value: [{"isbn":"1234567890","title":"Buch1","author":"Author1"},
-                      {"isbn":"0987654321","title":"Buch2","author":"Author2"},
-                      {"isbn":"1234560000","title":"Buch3","author":"Author3"}
-                  ]
-              }
+              books: Array
           }
       }
 
@@ -64,9 +58,10 @@
       }
 
       responseBooks(event) {
-          //console.log(JSON.parse(event.detail.response)._embedded.books);
-          console.log(event);
-          console.log(event.detail.response);
+          this.books = JSON.parse(event.detail.response)._embedded.books;
+          this.books.forEach((book) => {
+              book.isbn = book._links.self.href.substr(book._links.self.href.length - 13);
+          });
       }
 
       errorBooks(event) {

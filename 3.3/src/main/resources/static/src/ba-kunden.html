@@ -19,7 +19,7 @@
         <iron-ajax
                 id="postUser"
                 method="post"
-                url="/user"
+                url="http://localhost:8080/user"
                 content-type="application/json"
                 handle-as="application/json"
                 on-response="responseAdd"
@@ -65,7 +65,7 @@
 
             _addAccept(e) {
                 console.log("Hinzufügen Accept");
-                var body = {username: this.username, password: this.password};
+                var body = {username: this.username, password: this.password, lendings: []};
                 console.log(body);
                 this.$.postUser.body = body;
                 this.$.postUser.generateRequest();
@@ -78,8 +78,6 @@
 
             errorAdd(event) {
                 console.log(event);
-                console.log(event.detail);
-                console.log(event.detail.response);
             }
         }
 

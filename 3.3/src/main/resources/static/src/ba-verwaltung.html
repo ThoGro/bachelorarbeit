@@ -19,7 +19,7 @@
     <iron-ajax
             id="postBook"
             method="post"
-            url="/book"
+            url="http://localhost:8080/book"
             content-type="application/json"
             handle-as="application/json"
             on-response="responseAdd"
@@ -98,7 +98,7 @@
 
       _addAccept(e) {
           console.log("Hinzufügen Accept");
-          var body = {userid: this.newisbn, title: this.newtitle, author: this.newauthor};
+          var body = {isbn: this.newisbn, title: this.newtitle, author: this.newauthor};
           console.log(body);
           this.$.postBook.body = body;
           this.$.postBook.generateRequest();
