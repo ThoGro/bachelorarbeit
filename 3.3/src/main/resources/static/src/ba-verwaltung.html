@@ -4,6 +4,9 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/vaadin-dialog/vaadin-dialog.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="ba-verwaltung">
@@ -26,10 +29,35 @@
             on-error="errorAdd">
     </iron-ajax>
 
+    <iron-ajax
+            id="delBook"
+            method="delete"
+            content-type="application/json"
+            handle-as="application/json"
+            on-response="responseDelete"
+            on-error="errorDelete">
+    </iron-ajax>
+
+    <iron-ajax
+            id="putBook"
+            method="put"
+            content-type="application/json"
+            handle-as="application/json"
+            on-response="responseDelete"
+            on-error="errorDelete">
+    </iron-ajax>
+
+    <iron-ajax
+            id="getBooks"
+            method="get"
+            url="http://localhost:8080/book"
+            handle-as="application/json"
+            on-response="responseBooks"
+            on-error="errorBooks">
+    </iron-ajax>
+
     <paper-card>
       <h1>Bücherverwaltung</h1>
-      Jeweils Popup Fenster für Buch hinzufügen/löschen/bearbeiten,
-      über Eingabe validieren
       <paper-button on-click="hinzufuegen">Hinzufügen</paper-button>
       <paper-button on-click="loeschen">Löschen</paper-button>
       <paper-button on-click="bearbeiten">Bearbeiten</paper-button>
@@ -51,7 +79,14 @@
         <template>
           <h2>Buch löschen</h2>
           <p>
-            Liste mit allen Büchern, zu löschende Bücher auswählen
+            <template is="dom-repeat" items="{{books}}">
+              <div>
+                <paper-checkbox id="[[item.isbn]]"></paper-checkbox>
+                <paper-input disabled value="[[item.isbn]]"></paper-input>
+                <paper-input disabled value="[[item.title]]"></paper-input>
+                <paper-input disabled value="[[item.author]]"></paper-input>
+              </div>
+            </template>
           </p>
           <div class="buttons layout horizontal end-justified">
             <paper-button dialog-dismiss class="flat" on-click="_cancelDelete">Abbrechen</paper-button>
@@ -63,13 +98,18 @@
       <vaadin-dialog id="editBook" no-close-on-outside-click no-close-on-esc>
         <template>
           <h2>Buch bearbeiten</h2>
-          <p>
-            Sind Sie sicher, dass Sie tatsächlich ALLE Benutzer vom Wahllokal-System amelden wollen?
-            <br/> Noch nicht gespeicherte Eingaben der Benutzer werden verloren gehen.
-          </p>
+          <template is="dom-repeat" items="{{books}}">
+            <div>
+              <paper-input disabled value="[[item.isbn]]"></paper-input>
+              <paper-input id="title[[item.isbn]]" disabled value="[[item.title]]"></paper-input>
+              <paper-input id="author[[item.isbn]]" disabled value="[[item.author]]"></paper-input>
+              <paper-icon-button id="[[item.isbn]]" icon="create" on-click="edit"></paper-icon-button>
+              <paper-icon-button id="save[[item.isbn]]" icon="save" on-click="saveEdit" disabled></paper-icon-button>
+            </div>
+          </template>
           <div class="buttons layout horizontal end-justified">
-            <paper-button dialog-dismiss class="flat" on-click="_cancelEdit">Abbrechen</paper-button>
-            <paper-button dialog-confirm class="flat" on-click="_editAccept" disabled="[[!valid]]">Bearbeiten</paper-button>
+            <paper-button dialog-dismiss class="flat" on-click="_cancelEdit">Bearbeitung beenden</paper-button>
+            <!--paper-button dialog-confirm class="flat" on-click="_editAccept" disabled="[[!valid]]">Bearbeiten</paper-button-->
           </div>
         </template>
       </vaadin-dialog>
@@ -83,7 +123,8 @@
           return {
               newisbn: String,
               newtitle: String,
-              newauthor: String
+              newauthor: String,
+              books: Array
           }
       }
 
@@ -111,12 +152,11 @@
 
       errorAdd(event) {
           console.log(event);
-          console.log(event.detail);
-          console.log(event.detail.response);
       }
 
       loeschen() {
           console.log("Löschen");
+          this.$.getBooks.generateRequest();
           this.$.deleteBook.opened = true;
       }
 
@@ -126,21 +166,71 @@
 
       _deleteAccept(e) {
           console.log("Löschen Accept");
+          var checkboxes = document.querySelector('vaadin-dialog-overlay').$.content.shadowRoot.querySelectorAll('paper-checkbox');
+          checkboxes.forEach((checkbox) => {
+              if (checkbox.checked) {
+                  console.log(checkbox.id, " wird gelöscht");
+                  this.$.delBook.url = "http://localhost:8080/book/" + checkbox.id;
+                  this.$.delBook.generateRequest();
+              }
+          });
           this.$.deleteBook.opened = false;
+      }
+
+      responseDelete(event) {
+          console.log(event);
+      }
+
+      errorDelete(event) {
+          console.log(event);
       }
 
       bearbeiten() {
           console.log("Bearbeiten");
+          this.$.getBooks.generateRequest();
           this.$.editBook.opened = true;
+      }
+
+      edit(event) {
+          console.log("Bearbeiten ausgewählt");
+          var content = document.querySelector('vaadin-dialog-overlay').$.content;
+          content.shadowRoot.querySelector('#title' + event.target.id).disabled = false;
+          content.shadowRoot.querySelector('#author' + event.target.id).disabled = false;
+          content.shadowRoot.querySelector('#save' + event.target.id).disabled = false;
+      }
+
+      saveEdit(event) {
+          console.log("Änderung speichern");
+          var id = event.target.id.substr(event.target.id.length - 13);
+          var content = document.querySelector('vaadin-dialog-overlay').$.content;
+          var title = content.shadowRoot.querySelector('#title' + id).value;
+          var author = content.shadowRoot.querySelector('#author' + id).value;
+          this.$.putBook.body = {title, author };
+          this.$.putBook.url = "http://localhost:8080/book/" + id;
+          this.$.putBook.generateRequest();
+          content.shadowRoot.querySelector('#title' + id).disabled = true;
+          content.shadowRoot.querySelector('#author' + id).disabled = true;
+          content.shadowRoot.querySelector('#save' + id).disabled = true;
       }
 
       _cancelEdit(event) {
           this.$.editBook.opened = false;
       }
 
-      _editAccept(e) {
+      /*_editAccept(e) {
           console.log("Bearbeiten Accept");
           this.$.editBook.opened = false;
+      }*/
+
+      responseBooks(event) {
+          this.books = JSON.parse(event.detail.response)._embedded.books;
+          this.books.forEach((book) => {
+              book.isbn = book._links.self.href.substr(book._links.self.href.length - 13);
+          });
+      }
+
+      errorBooks(event) {
+          console.log(event);
       }
     }
 

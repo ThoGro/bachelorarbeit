@@ -15,6 +15,7 @@
         padding: 10px;
       }
     </style>
+
     <iron-ajax
         auto
         id="getBooks"
@@ -24,6 +25,7 @@
         on-response="responseBooks"
         on-error="errorBooks">
     </iron-ajax>
+
     <paper-card>
       <h1>Bücherausleihe</h1>
       <template is="dom-repeat" items="{{books}}">
@@ -67,6 +69,7 @@
       errorBooks(event) {
           console.log(event);
       }
+
     }
 
     window.customElements.define(Ausleihe.is, Ausleihe);
