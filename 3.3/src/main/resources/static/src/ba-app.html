@@ -10,6 +10,7 @@
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="my-icons.html">
 
 <link rel="lazy-import" href="ba-ausleihe.html">
@@ -56,6 +57,14 @@
       .drawer-list a.iron-selected {
         color: black;
         font-weight: bold;
+      }
+
+      #success {
+        --paper-toast-background-color: var(--paper-blue-500);
+      }
+
+      #error {
+        --paper-toast-background-color: var(--paper-red-500);
       }
     </style>
 
@@ -106,6 +115,9 @@
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
+
+    <paper-toast id="success"></paper-toast>
+    <paper-toast id="error" duration="5000"></paper-toast>
   </template>
 
   <script>
@@ -161,6 +173,18 @@
       _showPage404() {
         this.page = 'view404';
       }
+
+      showToast(element, message, type) {
+          let toast = this.shadowRoot.querySelector(`#${type}`);
+          if (toast) {
+              toast.close();
+              toast.text = message;
+              toast.show();
+          } else {
+              alert("#showToast doesn't support type " + type);
+          }
+      }
+
     }
 
     window.customElements.define(MyApp.is, MyApp);

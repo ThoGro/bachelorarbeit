@@ -17,6 +17,10 @@
 
         padding: 10px;
       }
+
+      .full-width {
+        width: 100%;
+      }
     </style>
 
     <iron-ajax
@@ -43,8 +47,8 @@
             method="put"
             content-type="application/json"
             handle-as="application/json"
-            on-response="responseDelete"
-            on-error="errorDelete">
+            on-response="responseEdit"
+            on-error="errorEdit">
     </iron-ajax>
 
     <iron-ajax
@@ -78,16 +82,22 @@
       <vaadin-dialog id="deleteBook" no-close-on-outside-click no-close-on-esc>
         <template>
           <h2>Buch löschen</h2>
-          <p>
+          <table class="full-width">
+            <tr>
+              <th>Ausleihen</th>
+              <th>ISBN</th>
+              <th>Titel</th>
+              <th>Author</th>
+            </tr>
             <template is="dom-repeat" items="{{books}}">
-              <div>
-                <paper-checkbox id="[[item.isbn]]"></paper-checkbox>
-                <paper-input disabled value="[[item.isbn]]"></paper-input>
-                <paper-input disabled value="[[item.title]]"></paper-input>
-                <paper-input disabled value="[[item.author]]"></paper-input>
-              </div>
+              <tr>
+                <td><paper-checkbox id="[[item.isbn]]"></paper-checkbox></td>
+                <td>[[item.isbn]]</td>
+                <td>[[item.title]]</td>
+                <td>[[item.author]]</td>
+              </tr>
             </template>
-          </p>
+          </table>
           <div class="buttons layout horizontal end-justified">
             <paper-button dialog-dismiss class="flat" on-click="_cancelDelete">Abbrechen</paper-button>
             <paper-button dialog-confirm class="flat" on-click="_deleteAccept" disabled="[[!valid]]">Löschen</paper-button>
@@ -98,15 +108,24 @@
       <vaadin-dialog id="editBook" no-close-on-outside-click no-close-on-esc>
         <template>
           <h2>Buch bearbeiten</h2>
-          <template is="dom-repeat" items="{{books}}">
-            <div>
-              <paper-input disabled value="[[item.isbn]]"></paper-input>
-              <paper-input id="title[[item.isbn]]" disabled value="[[item.title]]"></paper-input>
-              <paper-input id="author[[item.isbn]]" disabled value="[[item.author]]"></paper-input>
-              <paper-icon-button id="[[item.isbn]]" icon="create" on-click="edit"></paper-icon-button>
-              <paper-icon-button id="save[[item.isbn]]" icon="save" on-click="saveEdit" disabled></paper-icon-button>
-            </div>
-          </template>
+          <table class="full-width">
+            <tr>
+              <th>Ausleihen</th>
+              <th>ISBN</th>
+              <th>Titel</th>
+              <th>Author</th>
+            </tr>
+            <template is="dom-repeat" items="{{books}}">
+              <tr>
+                <td><paper-checkbox id="[[item.isbn]]"></paper-checkbox></td>
+                <td>[[item.isbn]]</td>
+                <td><paper-input id="title[[item.isbn]]" disabled value="[[item.title]]"></paper-input></td>
+                <td><paper-input id="author[[item.isbn]]" disabled value="[[item.author]]"></paper-input></td>
+                <td><paper-icon-button id="[[item.isbn]]" icon="create" on-click="edit"></paper-icon-button></td>
+                <td><paper-icon-button id="save[[item.isbn]]" icon="save" on-click="saveEdit" disabled></paper-icon-button></td>
+              </tr>
+            </template>
+          </table>
           <div class="buttons layout horizontal end-justified">
             <paper-button dialog-dismiss class="flat" on-click="_cancelEdit">Bearbeitung beenden</paper-button>
             <!--paper-button dialog-confirm class="flat" on-click="_editAccept" disabled="[[!valid]]">Bearbeiten</paper-button-->
@@ -148,10 +167,12 @@
 
       responseAdd(event) {
           console.log(event);
+          showToast(this, "Das Buch wurde erfolgreich hinzugefügt.", TOAST_TYPE.SUCCESS);
       }
 
       errorAdd(event) {
           console.log(event);
+          showToast(this, "Das Buch konnte nicht hinzugefügt werden.", TOAST_TYPE.ERROR);
       }
 
       loeschen() {
@@ -179,10 +200,12 @@
 
       responseDelete(event) {
           console.log(event);
+          showToast(this, "Die Löschung war erfolgreich.", TOAST_TYPE.SUCCESS);
       }
 
       errorDelete(event) {
           console.log(event);
+          showToast(this, "Die Löschung war nicht erfolgreich.", TOAST_TYPE.ERROR);
       }
 
       bearbeiten() {
@@ -213,6 +236,16 @@
           content.shadowRoot.querySelector('#save' + id).disabled = true;
       }
 
+      responseEdit(event) {
+          console.log(event);
+          showToast(this, "Das Buch wurde erfolgreich bearbeitet.", TOAST_TYPE.SUCCESS);
+      }
+
+      errorEdit(event) {
+          console.log(event);
+          showToast(this, "Das Buch konnte nicht bearbeitet werden.", TOAST_TYPE.ERROR);
+      }
+
       _cancelEdit(event) {
           this.$.editBook.opened = false;
       }
@@ -231,6 +264,7 @@
 
       errorBooks(event) {
           console.log(event);
+          showToast(this, "Die Bücher konnten nicht geladen werden.", TOAST_TYPE.ERROR);
       }
     }
 

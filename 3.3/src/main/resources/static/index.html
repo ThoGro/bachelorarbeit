@@ -98,4 +98,15 @@
     </noscript>
     <!-- Built with love using Polymer Starter Kit -->
   </body>
+<script>
+  function showToast(element, message, type) {
+      let app = document.querySelector('ba-app');
+      app.showToast(element, message, type);
+  }
+
+    const TOAST_TYPE = {
+        SUCCESS: "success",
+        ERROR: "error"
+    }
+</script>
 </html>
