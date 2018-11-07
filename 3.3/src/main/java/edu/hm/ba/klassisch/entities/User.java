@@ -1,10 +1,13 @@
 package edu.hm.ba.klassisch.entities;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
+@Data
 public class User implements Serializable{
 
     @Id
@@ -26,36 +29,4 @@ public class User implements Serializable{
         this.lendings = lendings;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setLendings(List<Lending> lendings) {
-        this.lendings = lendings;
-    }
-
-    public int getId() {
-
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public List<Lending> getLendings() {
-        return lendings;
-    }
 }
