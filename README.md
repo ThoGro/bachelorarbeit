@@ -21,11 +21,11 @@
 <br>&nbsp;&nbsp;3.4.1 Architektonischer Aufbau der Serverless-Applikation
 <br>&nbsp;&nbsp;3.4.2 Implementierung der Anwendung
 <br>&nbsp;&nbsp;3.4.3 Testen von serverless Anwendungen
-<br>&nbsp;&nbsp;3.4.4 Wechsel zwischen Providern
 <br>3.5 Unterschiede in der Entwicklung
 <br>&nbsp;&nbsp;3.5.1 Implementierungsvorgehen
 <br>&nbsp;&nbsp;3.5.2 Testen der Anwendung
 <br>&nbsp;&nbsp;3.5.3 Deployment der Applikation
+<br>&nbsp;&nbsp;3.5.4 Wechsel zwischen Providern
 4. Vergleich der beiden Umsetzungen
 <br>4.1 Vorteile der Serverless-Infrastruktur
 <br>4.2 Nachteile der Serverless-Infrastruktur
