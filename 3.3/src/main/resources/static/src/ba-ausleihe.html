@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="ba-ausleihe">
@@ -24,10 +25,18 @@
         auto
         id="getBooks"
         method="get"
-        url="http://localhost:8080/book"
+        url="http://localhost:8080/books"
         handle-as="application/json"
         on-response="responseBooks"
         on-error="errorBooks">
+    </iron-ajax>
+
+    <iron-ajax
+            id="lend"
+            method="put"
+            handle-as="application/json"
+            on-response="responseLend"
+            on-error="errorLend">
     </iron-ajax>
 
     <paper-card>
@@ -38,13 +47,29 @@
             <th>ISBN</th>
             <th>Titel</th>
             <th>Author</th>
+            <th>Verfügbar</th>
           </tr>
           <template is="dom-repeat" items="{{books}}">
             <tr>
-              <td><paper-checkbox id="[[item.isbn]]"></paper-checkbox></td>
+              <td>
+                <template is="dom-if" if="[[item.lender]]">
+                  <paper-checkbox id="[[item.isbn]]" disabled></paper-checkbox>
+                </template>
+                <template is="dom-if" if="[[!item.lender]]">
+                  <paper-checkbox id="[[item.isbn]]"></paper-checkbox>
+                </template>
+              </td>
               <td>[[item.isbn]]</td>
               <td>[[item.title]]</td>
               <td>[[item.author]]</td>
+              <td>
+                <template is="dom-if" if="[[item.lender]]">
+                  <iron-icon icon="clear"></iron-icon>
+                </template>
+                <template is="dom-if" if="[[!item.lender]]">
+                  <iron-icon icon="check"></iron-icon>
+                </template>
+              </td>
             </tr>
           </template>
         </table>
@@ -63,20 +88,32 @@
       }
 
       ausleihen() {
-          console.log("Ausleihen");
           var checkboxes = this.shadowRoot.querySelectorAll('paper-checkbox');
           checkboxes.forEach((checkbox) => {
              if (checkbox.checked) {
                  console.log(checkbox.id, " wird ausgeliehen");
+                 var user = {"id":"1","username":"Admin","password":"admin"}; //angemeldeter Nutzer
+                 this.$.lend.url = "http://localhost:8080/lend/" + user.id + "/" + checkbox.id;
+                 checkbox.checked = false;
+                 this.$.lend.generateRequest();
              }
           });
       }
 
+      responseLend(event) {
+          console.log(event);
+          showToast(this, "Die Ausleihe wurde durchgeführt.", TOAST_TYPE.SUCCESS);
+          this.$.getBooks.generateRequest();
+      }
+
+      errorLend(event) {
+          console.log(event);
+          showToast(this, "Die Ausleihe konnte nicht durchgeführt werden.", TOAST_TYPE.ERROR);
+      }
+
       responseBooks(event) {
-          this.books = JSON.parse(event.detail.response)._embedded.books;
-          this.books.forEach((book) => {
-              book.isbn = book._links.self.href.substr(book._links.self.href.length - 13);
-          });
+          this.books = JSON.parse(event.detail.response);
+          console.log(this.books);
       }
 
       errorBooks(event) {

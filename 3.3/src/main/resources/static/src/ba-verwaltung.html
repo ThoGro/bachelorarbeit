@@ -54,7 +54,7 @@
     <iron-ajax
             id="getBooks"
             method="get"
-            url="http://localhost:8080/book"
+            url="http://localhost:8080/books"
             handle-as="application/json"
             on-response="responseBooks"
             on-error="errorBooks">
@@ -128,7 +128,6 @@
           </table>
           <div class="buttons layout horizontal end-justified">
             <paper-button dialog-dismiss class="flat" on-click="_cancelEdit">Bearbeitung beenden</paper-button>
-            <!--paper-button dialog-confirm class="flat" on-click="_editAccept" disabled="[[!valid]]">Bearbeiten</paper-button-->
           </div>
         </template>
       </vaadin-dialog>
@@ -250,16 +249,8 @@
           this.$.editBook.opened = false;
       }
 
-      /*_editAccept(e) {
-          console.log("Bearbeiten Accept");
-          this.$.editBook.opened = false;
-      }*/
-
       responseBooks(event) {
-          this.books = JSON.parse(event.detail.response)._embedded.books;
-          this.books.forEach((book) => {
-              book.isbn = book._links.self.href.substr(book._links.self.href.length - 13);
-          });
+          this.books = JSON.parse(event.detail.response);
       }
 
       errorBooks(event) {
