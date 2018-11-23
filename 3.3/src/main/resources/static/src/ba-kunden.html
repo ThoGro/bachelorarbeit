@@ -70,14 +70,18 @@
                 this.$.postUser.body = body;
                 this.$.postUser.generateRequest();
                 this.$.addUser.opened = false;
+                this.username = "";
+                this.password = "";
             }
 
             responseAdd(event) {
                 console.log(event);
+                showToast(this, "Der User wurde erfolgreich hinzugefügt.", TOAST_TYPE.SUCCESS);
             }
 
             errorAdd(event) {
                 console.log(event);
+                showToast(this, "Der User konnte nicht hinzugefügt werden.", TOAST_TYPE.ERROR);
             }
         }
 

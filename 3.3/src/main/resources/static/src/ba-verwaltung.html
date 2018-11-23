@@ -72,6 +72,7 @@
           <paper-input label="ISBN" value="{{newisbn}}"></paper-input>
           <paper-input label="Titel" type="text" value="{{newtitle}}"></paper-input>
           <paper-input label="Autor" type="text" value="{{newauthor}}"></paper-input>
+          <paper-input label="Kategorie(SCIENCE, FANTASY, HISTORY)" type="text" value="{{newcategory}}"></paper-input>
           <div class="buttons layout horizontal end-justified">
             <paper-button dialog-dismiss class="flat" on-click="_cancelAdd">Abbrechen</paper-button>
             <paper-button dialog-confirm class="flat" on-click="_addAccept" disabled="[[!valid]]">Hinzufügen</paper-button>
@@ -110,17 +111,16 @@
           <h2>Buch bearbeiten</h2>
           <table class="full-width">
             <tr>
-              <th>Ausleihen</th>
               <th>ISBN</th>
               <th>Titel</th>
               <th>Author</th>
             </tr>
             <template is="dom-repeat" items="{{books}}">
               <tr>
-                <td><paper-checkbox id="[[item.isbn]]"></paper-checkbox></td>
                 <td>[[item.isbn]]</td>
                 <td><paper-input id="title[[item.isbn]]" disabled value="[[item.title]]"></paper-input></td>
                 <td><paper-input id="author[[item.isbn]]" disabled value="[[item.author]]"></paper-input></td>
+                <td><paper-input id="category[[item.isbn]]" disabled value="[[item.category]]"></paper-input></td>
                 <td><paper-icon-button id="[[item.isbn]]" icon="create" on-click="edit"></paper-icon-button></td>
                 <td><paper-icon-button id="save[[item.isbn]]" icon="save" on-click="saveEdit" disabled></paper-icon-button></td>
               </tr>
@@ -142,12 +142,12 @@
               newisbn: String,
               newtitle: String,
               newauthor: String,
+              newcategory: String,
               books: Array
           }
       }
 
       hinzufuegen(e) {
-          console.log("Hinzufügen");
           this.$.addBook.opened = true;
       }
 
@@ -156,8 +156,11 @@
       }
 
       _addAccept(e) {
-          console.log("Hinzufügen Accept");
-          var body = {isbn: this.newisbn, title: this.newtitle, author: this.newauthor};
+          var body = {isbn: this.newisbn, title: this.newtitle, author: this.newauthor, category: this.newcategory};
+          this.newisbn = "";
+          this.newtitle = "";
+          this.newauthor = "";
+          this.newcategory = "";
           console.log(body);
           this.$.postBook.body = body;
           this.$.postBook.generateRequest();
@@ -175,7 +178,6 @@
       }
 
       loeschen() {
-          console.log("Löschen");
           this.$.getBooks.generateRequest();
           this.$.deleteBook.opened = true;
       }
@@ -185,13 +187,13 @@
       }
 
       _deleteAccept(e) {
-          console.log("Löschen Accept");
           var checkboxes = document.querySelector('vaadin-dialog-overlay').$.content.shadowRoot.querySelectorAll('paper-checkbox');
           checkboxes.forEach((checkbox) => {
               if (checkbox.checked) {
                   console.log(checkbox.id, " wird gelöscht");
                   this.$.delBook.url = "http://localhost:8080/book/" + checkbox.id;
                   this.$.delBook.generateRequest();
+                  checkbox.checked = false;
               }
           });
           this.$.deleteBook.opened = false;
@@ -208,31 +210,31 @@
       }
 
       bearbeiten() {
-          console.log("Bearbeiten");
           this.$.getBooks.generateRequest();
           this.$.editBook.opened = true;
       }
 
       edit(event) {
-          console.log("Bearbeiten ausgewählt");
           var content = document.querySelector('vaadin-dialog-overlay').$.content;
           content.shadowRoot.querySelector('#title' + event.target.id).disabled = false;
           content.shadowRoot.querySelector('#author' + event.target.id).disabled = false;
+          content.shadowRoot.querySelector('#category' + event.target.id).disabled = false;
           content.shadowRoot.querySelector('#save' + event.target.id).disabled = false;
       }
 
       saveEdit(event) {
-          console.log("Änderung speichern");
-          var id = event.target.id.substr(event.target.id.length - 13);
+          var isbn = event.target.id.substr(event.target.id.length - 13);
           var content = document.querySelector('vaadin-dialog-overlay').$.content;
-          var title = content.shadowRoot.querySelector('#title' + id).value;
-          var author = content.shadowRoot.querySelector('#author' + id).value;
-          this.$.putBook.body = {title, author };
-          this.$.putBook.url = "http://localhost:8080/book/" + id;
+          var title = content.shadowRoot.querySelector('#title' + isbn).value;
+          var author = content.shadowRoot.querySelector('#author' + isbn).value;
+          var category = content.shadowRoot.querySelector('#category' + isbn).value;
+          this.$.putBook.body = {isbn, title, author, category};
+          this.$.putBook.url = "http://localhost:8080/book";
           this.$.putBook.generateRequest();
-          content.shadowRoot.querySelector('#title' + id).disabled = true;
-          content.shadowRoot.querySelector('#author' + id).disabled = true;
-          content.shadowRoot.querySelector('#save' + id).disabled = true;
+          content.shadowRoot.querySelector('#title' + isbn).disabled = true;
+          content.shadowRoot.querySelector('#author' + isbn).disabled = true;
+          content.shadowRoot.querySelector('#category' + isbn).disabled = true;
+          content.shadowRoot.querySelector('#save' + isbn).disabled = true;
       }
 
       responseEdit(event) {
