@@ -1,0 +1,66 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="ba-statistic">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+
+                padding: 10px;
+            }
+        </style>
+
+        <iron-ajax
+                auto
+                id="getStatistics"
+                method="get"
+                url="http://localhost:8080/statistics"
+                content-type="application/json"
+                handle-as="application/json"
+                on-response="responseStatistics"
+                on-error="errorStatistics">
+        </iron-ajax>
+
+        <paper-card>
+            <h1>Nutzerstatistik</h1>
+            <table class="full-width">
+                <tr>
+                    <th>Anzahl Ausleihen</th>
+                    <th>Kategorie</th>
+                </tr>
+                <template is="dom-repeat" items="{{statistics}}">
+                    <tr>
+                        <td>[[item.count]]</td>
+                        <td>[[item.category]]</td>
+                    </tr>
+                </template>
+            </table>
+        </paper-card>
+    </template>
+
+    <script>
+        class Statistic extends Polymer.Element {
+            static get is() { return 'ba-statistic'; }
+            static get properties() {
+                return {
+                    statistics: Array
+                }
+            }
+
+            responseStatistics(event) {
+                this.statistics = JSON.parse(event.detail.response);
+                console.log(event);
+            }
+
+            errorStatistics(event) {
+                console.log(event);
+                showToast(this, "Die Nutzerstatistiken konnten nicht geladen werden.", TOAST_TYPE.ERROR);
+            }
+        }
+
+        window.customElements.define(Statistic.is, Statistic);
+    </script>
+</dom-module>

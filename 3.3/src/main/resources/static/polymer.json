@@ -6,6 +6,7 @@
     "src/ba-verwaltung.html",
     "src/ba-rueckgabe.html",
     "src/ba-kunden.html",
+    "src/ba-statistic.html",
     "src/ba-view404.html"
   ],
   "sources": [

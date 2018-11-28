@@ -51,4 +51,16 @@ public class BookServiceImpl implements BookService {
             bookRepository.save(toLend);
         }
     }
+
+    @Override
+    public void returnBook(int userid, String isbn) {
+        if (userRepository.existsById(userid) && bookRepository.existsById(isbn)) {
+            Book toReturn = bookRepository.getOne(isbn);
+            User returner = userRepository.getOne(userid);
+            if (toReturn.getLender() == null || toReturn.getLender().equals(returner)) {
+                toReturn.setLender(null);
+                bookRepository.save(toReturn);
+            }
+        }
+    }
 }

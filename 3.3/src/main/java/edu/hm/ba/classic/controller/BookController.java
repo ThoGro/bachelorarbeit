@@ -37,7 +37,12 @@ public class BookController {
 
     @PutMapping(path = "/lend/{userid}/{isbn}")
     public void lendBook(@PathVariable int userid, @PathVariable String isbn) {
-        bookService.lendBook(userid, isbn);
+       bookService.lendBook(userid, isbn);
+    }
+
+    @PutMapping(path = "/return/{userid}/{isbn}")
+    public void returnBook(@PathVariable int userid, @PathVariable String isbn) {
+        bookService.returnBook(userid, isbn);
     }
 
 }

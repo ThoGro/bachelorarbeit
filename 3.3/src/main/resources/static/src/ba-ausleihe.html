@@ -39,6 +39,14 @@
             on-error="errorLend">
     </iron-ajax>
 
+    <iron-ajax
+            id="statistic"
+            method="post"
+            handle-as="application/json"
+            on-response="responseStatistic"
+            on-error="errorStatistic">
+    </iron-ajax>
+
     <paper-card>
       <h1>Bücherausleihe</h1>
         <table class="full-width">
@@ -47,6 +55,7 @@
             <th>ISBN</th>
             <th>Titel</th>
             <th>Author</th>
+            <th>Kategorie</th>
             <th>Verfügbar</th>
           </tr>
           <template is="dom-repeat" items="{{books}}">
@@ -62,6 +71,7 @@
               <td>[[item.isbn]]</td>
               <td>[[item.title]]</td>
               <td>[[item.author]]</td>
+              <td>[[item.category]]</td>
               <td>
                 <template is="dom-if" if="[[item.lender]]">
                   <iron-icon icon="clear"></iron-icon>
@@ -91,7 +101,6 @@
           var checkboxes = this.shadowRoot.querySelectorAll('paper-checkbox');
           checkboxes.forEach((checkbox) => {
              if (checkbox.checked) {
-                 console.log(checkbox.id, " wird ausgeliehen");
                  var user = {"id":"1","username":"Admin","password":"admin"}; //angemeldeter Nutzer
                  this.$.lend.url = "http://localhost:8080/lend/" + user.id + "/" + checkbox.id;
                  checkbox.checked = false;
@@ -100,10 +109,18 @@
           });
       }
 
-      responseLend(event) {
+      responseLend(event, request) {
           console.log(event);
           showToast(this, "Die Ausleihe wurde durchgeführt.", TOAST_TYPE.SUCCESS);
-          this.$.getBooks.generateRequest();
+          var isbn = request.url.substr(request.url.length - 13);
+          var category;
+          this.books.forEach((book) => {
+              if (book.isbn === isbn) {
+                  category = book.category;
+              }
+          });
+          this.$.statistic.url = "http://localhost:8080/statistic/" + category;
+          this.$.statistic.generateRequest();
       }
 
       errorLend(event) {
@@ -119,6 +136,15 @@
       errorBooks(event) {
           console.log(event);
           showToast(this, "Die Bücher konnten nicht geladen werden.", TOAST_TYPE.ERROR);
+      }
+
+      responseStatistic(event) {
+          console.log(event);
+      }
+
+      errorStatistic(event) {
+          console.log(event);
+          showToast(this, "Die Ausleihe konnte nicht in der Statistik erfasst werden.", TOAST_TYPE.ERROR);
       }
 
     }

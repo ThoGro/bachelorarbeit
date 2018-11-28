@@ -16,4 +16,6 @@ public interface BookService {
 
     void lendBook(int userid, String isbn);
 
+    void returnBook(int userid, String isbn);
+
 }
