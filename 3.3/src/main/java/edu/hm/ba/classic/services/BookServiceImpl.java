@@ -9,12 +9,22 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
+/**
+ * Implementation of the BookService.
+ * @author Thomas Großbeck
+ */
 @Service
 public class BookServiceImpl implements BookService {
 
+    /**
+     * Book Repository.
+     */
     @Autowired
     BookRepository bookRepository;
 
+    /**
+     * User Repository.
+     */
     @Autowired
     UserRepository userRepository;
 

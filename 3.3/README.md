@@ -3,7 +3,9 @@
 ### Beispiel-Anwendung: Bibliotheksservice
 
 - Rollen: Mitarbeiter, Kunde
-- User existieren zum Start der Anwendung bereits und können nicht bearbeitet werden
 - Bücher können von Mitarbeitern angelegt, gelöscht und bearbeitet werden
+- Von jedem Buch gibt es nur ein Exemplar
 - Kunden können die Bücher ausleihen und zurückgeben
 - Eine Leihe hat keine Auslaufdatum
+- User können sich am System an- und abmelden
+- Ausleihen werden in einer Statistik vermerkt

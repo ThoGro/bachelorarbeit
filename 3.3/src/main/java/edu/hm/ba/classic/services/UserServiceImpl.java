@@ -7,9 +7,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
+/**
+ * Implementation of the UserService.
+ * @author Thomas Großbeck
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
+    /**
+     * User Repository.
+     */
     @Autowired
     UserRepository userRepository;
 

@@ -8,6 +8,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StatisticRepository extends JpaRepository<Statistic, Integer> {
 
+    /**
+     * Returns a statistic for the specified category.
+     * @param category the category for which the statistic is required
+     * @return returns the statistic for the specified category
+     */
     Statistic getStatisticByCategory(Category category);
 
 }

@@ -8,9 +8,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
+/**
+ * Implementation of the StatisticService.
+ * @author Thomas Großbeck
+ */
 @Service
 public class StatisticServiceImpl implements StatisticService {
 
+    /**
+     * Statistic Repository.
+     */
     @Autowired
     StatisticRepository statisticRepository;
 
