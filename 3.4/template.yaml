@@ -29,6 +29,22 @@ Resources:
                         Path: /hello
                         Method: get
 
+    BookFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: target/Serverless-1.0.jar
+            Handler: edu.hm.ba.serverless.Books::handleRequest
+            Runtime: java8
+            Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+                Variables:
+                    PARAM1: VALUE
+            Events:
+                GetBooks:
+                    Type: Api
+                    Properties:
+                        Path: /books
+                        Method: get
+
 Outputs:
 
     ServerlessApi:
@@ -42,3 +58,7 @@ Outputs:
     ServerlessIamRole:
       Description: "Implicit IAM Role created for Hello World function"
       Value: !GetAtt ServerlessFunctionRole.Arn
+
+    BooksApi:
+      Description: "API Gateway endpoint URL for Prod stage for Books function"
+      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/books/"
