@@ -1,4 +1,4 @@
-package edu.hm.ba.serverless;
+package helloworld;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

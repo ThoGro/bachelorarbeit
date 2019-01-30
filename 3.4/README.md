@@ -1,23 +1,4 @@
-# sam-app
-
-This is a sample template for sam-app - Below is a brief explanation of what we have generated for you:
-
-```bash
-.
-├── README.md                               <-- This instructions file
-├── pom.xml                                 <-- Java dependencies
-├── src
-│   ├── main
-│   │   └── java
-│   │       └── helloworld                  <-- Source code for a lambda function
-│   │           ├── App.java                <-- Lambda function code
-│   │           └── GatewayResponse.java    <-- POJO for API Gateway Responses object 
-│   └── test                                <-- Unit tests
-│       └── java
-│           └── helloworld
-│               └── AppTest.java
-└── template.yaml
-```
+# serverless-app
 
 ## Requirements
 
@@ -67,7 +48,10 @@ AWS Lambda Java runtime accepts either a zip file or a standalone JAR file - We 
         Type: AWS::Serverless::Function
         Properties:
             CodeUri: target/HelloWorld-1.0.jar
-            Handler: Apply, we need a `S3 bucket` where we can upload our Lambda functions packaged as ZIP before we deploy anything - If you don't have a S3 bucket to store code artifacts then this is a good time to create one:
+            Handler: helloworld.App::handleRequest
+```
+
+Firstly, we need a `S3 bucket` where we can upload our Lambda functions packaged as ZIP before we deploy anything - If you don't have a S3 bucket to store code artifacts then this is a good time to create one:
 
 ```bash
 aws s3 mb s3://BUCKET_NAME

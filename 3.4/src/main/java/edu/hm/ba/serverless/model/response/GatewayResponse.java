@@ -1,12 +1,14 @@
-package edu.hm.ba.serverless;
+package edu.hm.ba.serverless.model.response;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import lombok.Getter;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * POJO containing response object for API Gateway.
- */
+@Getter
+@JsonAutoDetect
 public class GatewayResponse {
 
     private final String body;
@@ -14,20 +16,9 @@ public class GatewayResponse {
     private final int statusCode;
 
     public GatewayResponse(final String body, final Map<String, String> headers, final int statusCode) {
-        this.statusCode = statusCode;
         this.body = body;
         this.headers = Collections.unmodifiableMap(new HashMap<>(headers));
+        this.statusCode = statusCode;
     }
 
-    public String getBody() {
-        return body;
-    }
-
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
-
-    public int getStatusCode() {
-        return statusCode;
-    }
 }
