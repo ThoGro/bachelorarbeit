@@ -40,6 +40,33 @@ public class BookDao {
         }
     }
 
+    public Book createBook(final CreateBookRequest createBookRequest) {
+        if (createBookRequest == null) {
+            throw new IllegalArgumentException("CreateBookRequest was null");
+        }
+        int tries = 0;
+        while (tries < 10) {
+            try {
+                Map<String, AttributeValue> item = createBookItem(createBookRequest);
+                dynamoDb.putItem(PutItemRequest.builder()
+                        .tableName(tableName)
+                        .item(item)
+                        .conditionExpression("attribute_not_exists(isbn)")
+                        .build());
+                return Book.builder()
+                        .isbn(item.get(BOOK_ID).s())
+                        .title(item.get("title").s())
+                        .author(item.get("author").s())
+                        .build();
+            } catch (ConditionalCheckFailedException e) {
+                tries++;
+            } catch (ResourceNotFoundException e) {
+                throw new TableDoesNotExistException("Book table " + tableName + " does not exist.");
+            }
+        }
+        throw new CouldNotCreateBookException("Unable to generate unique book id after 10 tries");
+    }
+
     private Book convert(final Map<String, AttributeValue> item) {
         if (item == null || item.isEmpty()) {
             return null;
@@ -82,33 +109,6 @@ public class BookDao {
             throw new IllegalArgumentException("author was null");
         }
         return item;
-    }
-
-    public Book createBook(final CreateBookRequest createBookRequest) {
-        if (createBookRequest == null) {
-            throw new IllegalArgumentException("CreateBookRequest was null");
-        }
-        int tries = 0;
-        while (tries < 10) {
-            try {
-                Map<String, AttributeValue> item = createBookItem(createBookRequest);
-                dynamoDb.putItem(PutItemRequest.builder()
-                        .tableName(tableName)
-                        .item(item)
-                        .conditionExpression("attribute_not_exists(isbn)")
-                        .build());
-                return Book.builder()
-                        .isbn(item.get(BOOK_ID).s())
-                        .title(item.get("title").s())
-                        .author(item.get("author").s())
-                        .build();
-            } catch (ConditionalCheckFailedException e) {
-                tries++;
-            } catch (ResourceNotFoundException e) {
-                throw new TableDoesNotExistException("Book table " + tableName + " does not exist.");
-            }
-        }
-        throw new CouldNotCreateBookException("Unable to generate unique book id after 10 tries");
     }
 
 }

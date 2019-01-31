@@ -2,8 +2,7 @@ package edu.hm.ba.serverless.model;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

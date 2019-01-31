@@ -10,6 +10,8 @@
 <br>&nbsp;&nbsp;2.1.3 Abgrenzung zu Microservices
 <br>2.2 Eigenschaften von Function-as-a-Service
 <br>2.3 Allgemeine Patterns für Serverless-Umsetzungen
+<br>&nbsp;&nbsp;2.3.1 Serverless Computing Manifest
+<br>&nbsp;&nbsp;2.3.2 Schnittstellen zu anderen Architekturen
 3. Entwicklung einer prototypischen Anwendung
 <br>3.1 Vorgehensweise beim Vergleich der beiden Anwendungen
 <br>3.2 Fachliche Beschreibung der Beispiel-Anwendung

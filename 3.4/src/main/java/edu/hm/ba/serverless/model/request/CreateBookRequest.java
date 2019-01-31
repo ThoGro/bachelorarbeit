@@ -3,8 +3,7 @@ package edu.hm.ba.serverless.model.request;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

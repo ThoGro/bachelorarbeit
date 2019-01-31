@@ -11,8 +11,6 @@ import javax.inject.Singleton;
 @Component(modules = {BookModule.class})
 public interface BookComponent {
 
-    //BookDao provideBookDao();
-
     void inject(CreateBookHandler requestHandler);
 
     void inject(GetBookHandler requestHandler);
