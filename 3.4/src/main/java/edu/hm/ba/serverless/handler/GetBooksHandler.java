@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 
-public class GetBooksHandler implements RequestHandler<Map<String, Object>, GatewayResponse>, BookRequestHandler {
+public class GetBooksHandler implements RequestHandler<Map<String, Object>, GatewayResponse>, ConstantRequestHandler {
 
     @Inject
     ObjectMapper objectMapper;

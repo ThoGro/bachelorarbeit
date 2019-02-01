@@ -1,10 +1,9 @@
 package edu.hm.ba.serverless.handler;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public interface BookRequestHandler {
+public interface ConstantRequestHandler {
 
     int SC_OK = 200;
     int SC_CREATED = 201;

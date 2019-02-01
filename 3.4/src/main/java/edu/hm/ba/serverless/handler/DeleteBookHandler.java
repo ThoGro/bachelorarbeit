@@ -13,7 +13,7 @@ import edu.hm.ba.serverless.model.response.GatewayResponse;
 import javax.inject.Inject;
 import java.util.Map;
 
-public class DeleteBookHandler implements RequestHandler<Map<String, Object>, GatewayResponse>, BookRequestHandler {
+public class DeleteBookHandler implements RequestHandler<Map<String, Object>, GatewayResponse>, ConstantRequestHandler {
 
     @Inject
     ObjectMapper objectMapper;
