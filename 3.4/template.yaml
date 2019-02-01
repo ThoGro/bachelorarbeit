@@ -43,6 +43,18 @@ Resources:
                     Properties:
                         Path: /books/{isbn}
                         Method: get
+    GetBooksFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: target/Serverless-1.0.jar
+            Handler: edu.hm.ba.serverless.handler.GetBooksHandler::handleRequest
+            Runtime: java8
+            Events:
+                GetBooks:
+                    Type: Api
+                    Properties:
+                        Path: /books
+                        Method: get
     CreateBookFunction:
         Type: AWS::Serverless::Function
         Properties:

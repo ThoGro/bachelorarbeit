@@ -7,10 +7,8 @@ import edu.hm.ba.serverless.model.request.CreateBookRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class BookDao {
 
@@ -38,6 +36,21 @@ public class BookDao {
         } catch (ResourceNotFoundException e) {
             throw new TableDoesNotExistException("Book table " + tableName + " does not exist.");
         }
+    }
+
+    public List<Book> getBooks() {
+        final ScanResponse result;
+        try {
+            ScanRequest.Builder scanBuilder = ScanRequest.builder()
+                    .tableName(tableName);
+            result = dynamoDb.scan(scanBuilder.build());
+        } catch (ResourceNotFoundException e) {
+            throw new TableDoesNotExistException("Book table " + tableName + "does not exist.");
+        }
+        final List<Book> books = result.items().stream()
+                .map(this::convert)
+                .collect(Collectors.toList());
+        return books;
     }
 
     public Book createBook(final CreateBookRequest createBookRequest) {

@@ -4,6 +4,7 @@ import dagger.Component;
 import edu.hm.ba.serverless.dao.BookDao;
 import edu.hm.ba.serverless.handler.CreateBookHandler;
 import edu.hm.ba.serverless.handler.GetBookHandler;
+import edu.hm.ba.serverless.handler.GetBooksHandler;
 
 import javax.inject.Singleton;
 
@@ -14,5 +15,7 @@ public interface BookComponent {
     void inject(CreateBookHandler requestHandler);
 
     void inject(GetBookHandler requestHandler);
+
+    void inject(GetBooksHandler requestHandler);
 
 }

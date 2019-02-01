@@ -2,7 +2,6 @@ package edu.hm.ba.serverless.handler;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hm.ba.serverless.config.DaggerBookComponent;
@@ -14,6 +13,7 @@ import edu.hm.ba.serverless.model.request.CreateBookRequest;
 import edu.hm.ba.serverless.model.response.GatewayResponse;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.Map;
 
 public class CreateBookHandler implements RequestHandler<Map<String, Object>, GatewayResponse>, BookRequestHandler {
@@ -39,14 +39,10 @@ public class CreateBookHandler implements RequestHandler<Map<String, Object>, Ga
             CreateBookRequest  createBookRequest = new CreateBookRequest(
                     bodyMap.get("isbn").toString(), bodyMap.get("title").toString(), bodyMap.get("author").toString());
             final Book book = bookDao.createBook(createBookRequest);
-            try {
-                return new GatewayResponse(objectMapper.writeValueAsString(book), HEADER, SC_CREATED);
-            } catch (JsonProcessingException e) {
-                return new GatewayResponse(e.getMessage(), HEADER, SC_INTERNAL_SERVER_ERROR);
-            }
+            return new GatewayResponse(objectMapper.writeValueAsString(book), HEADER, SC_CREATED);
         } catch (CouldNotCreateBookException e) {
             return new GatewayResponse(e.getMessage(), HEADER, SC_INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
+        } catch (IOException e) {
             return new GatewayResponse(e.getMessage(), HEADER, SC_INTERNAL_SERVER_ERROR);
         }
     }
