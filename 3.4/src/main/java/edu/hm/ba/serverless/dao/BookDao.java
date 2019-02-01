@@ -2,6 +2,7 @@ package edu.hm.ba.serverless.dao;
 
 import edu.hm.ba.serverless.exception.CouldNotCreateBookException;
 import edu.hm.ba.serverless.exception.TableDoesNotExistException;
+import edu.hm.ba.serverless.exception.UnableToDeleteException;
 import edu.hm.ba.serverless.model.Book;
 import edu.hm.ba.serverless.model.request.CreateBookRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
@@ -78,6 +79,27 @@ public class BookDao {
             }
         }
         throw new CouldNotCreateBookException("Unable to generate unique book id after 10 tries");
+    }
+
+    public Book deleteBook(final String isbn) {
+        try {
+            return Optional.ofNullable(dynamoDb.deleteItem(DeleteItemRequest.builder()
+                        .tableName(tableName)
+                        .key(Collections.singletonMap(BOOK_ID,
+                                AttributeValue.builder().s(isbn).build()))
+                        .conditionExpression("attribute_exists(isbn)")
+                        .returnValues(ReturnValue.ALL_OLD)
+                        .build()))
+                    .map(DeleteItemResponse::attributes)
+                    .map(this::convert)
+                    .orElseThrow(() -> new IllegalStateException("Condition passed but deleted item was null"));
+        } catch (ConditionalCheckFailedException e) {
+            throw new UnableToDeleteException(
+                    "A competing request changed the book while processing this request");
+        } catch (ResourceNotFoundException e) {
+            throw new TableDoesNotExistException("Book table " + tableName
+                    + " does not exist and was deleted after reading the book");
+        }
     }
 
     private Book convert(final Map<String, AttributeValue> item) {

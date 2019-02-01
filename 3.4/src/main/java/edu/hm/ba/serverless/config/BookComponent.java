@@ -3,6 +3,7 @@ package edu.hm.ba.serverless.config;
 import dagger.Component;
 import edu.hm.ba.serverless.dao.BookDao;
 import edu.hm.ba.serverless.handler.CreateBookHandler;
+import edu.hm.ba.serverless.handler.DeleteBookHandler;
 import edu.hm.ba.serverless.handler.GetBookHandler;
 import edu.hm.ba.serverless.handler.GetBooksHandler;
 
@@ -17,5 +18,7 @@ public interface BookComponent {
     void inject(GetBookHandler requestHandler);
 
     void inject(GetBooksHandler requestHandler);
+
+    void inject(DeleteBookHandler requestHandler);
 
 }

@@ -11,10 +11,9 @@ import edu.hm.ba.serverless.model.Book;
 import edu.hm.ba.serverless.model.response.GatewayResponse;
 
 import javax.inject.Inject;
-import java.util.List;
 import java.util.Map;
 
-public class GetBooksHandler implements RequestHandler<Map<String, Object>, GatewayResponse>, BookRequestHandler {
+public class DeleteBookHandler implements RequestHandler<Map<String, Object>, GatewayResponse>, BookRequestHandler {
 
     @Inject
     ObjectMapper objectMapper;
@@ -24,16 +23,18 @@ public class GetBooksHandler implements RequestHandler<Map<String, Object>, Gate
 
     private final BookComponent bookComponent;
 
-    public GetBooksHandler() {
+    public DeleteBookHandler() {
         bookComponent = DaggerBookComponent.builder().build();
         bookComponent.inject(this);
     }
 
     @Override
     public GatewayResponse handleRequest(Map<String, Object> input, Context context) {
-        List<Book> books = bookDao.getBooks();
+        String pathParameter = input.get("pathParameters").toString();
+        String isbn = pathParameter.substring(6, pathParameter.length()-1);
+        Book deleted = bookDao.deleteBook(isbn);
         try {
-            return new GatewayResponse(objectMapper.writeValueAsString(books), HEADER, SC_OK);
+            return new GatewayResponse(objectMapper.writeValueAsString(deleted), HEADER, SC_OK);
         } catch (JsonProcessingException e) {
             return new GatewayResponse(e.getMessage(), HEADER, SC_INTERNAL_SERVER_ERROR);
         }

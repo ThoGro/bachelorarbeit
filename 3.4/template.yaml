@@ -67,6 +67,18 @@ Resources:
                     Properties:
                         Path: /books
                         Method: post
+    DeleteBookFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: target/Serverless-1.0.jar
+            Handler: edu.hm.ba.serverless.handler.DeleteBookHandler::handleRequest
+            Runtime: java8
+            Events:
+                DeleteBook:
+                    Type: Api
+                    Properties:
+                        Path: /books/{isbn}
+                        Method: delete
 
 Outputs:
 
