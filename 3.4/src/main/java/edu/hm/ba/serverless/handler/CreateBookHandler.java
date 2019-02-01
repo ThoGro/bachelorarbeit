@@ -3,6 +3,7 @@ package edu.hm.ba.serverless.handler;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hm.ba.serverless.config.DaggerBookComponent;
 import edu.hm.ba.serverless.config.BookComponent;
@@ -15,7 +16,7 @@ import edu.hm.ba.serverless.model.response.GatewayResponse;
 import javax.inject.Inject;
 import java.util.Map;
 
-public class CreateBookHandler implements RequestHandler<Map<String, String>, GatewayResponse>, BookRequestHandler {
+public class CreateBookHandler implements RequestHandler<Map<String, Object>, GatewayResponse>, BookRequestHandler {
 
     @Inject
     ObjectMapper objectMapper;
@@ -31,10 +32,12 @@ public class CreateBookHandler implements RequestHandler<Map<String, String>, Ga
     }
 
     @Override
-    public GatewayResponse handleRequest(Map<String, String> input, Context context) {
+    public GatewayResponse handleRequest(Map<String, Object> input, Context context) {
         try {
-            CreateBookRequest createBookRequest = new CreateBookRequest(
-                    input.get("isbn"), input.get("title"), input.get("author"));
+            String body = input.get("body").toString();
+            Map<String, Object> bodyMap = objectMapper.readValue(body, new TypeReference<Map<String, String>>(){});
+            CreateBookRequest  createBookRequest = new CreateBookRequest(
+                    bodyMap.get("isbn").toString(), bodyMap.get("title").toString(), bodyMap.get("author").toString());
             final Book book = bookDao.createBook(createBookRequest);
             try {
                 return new GatewayResponse(objectMapper.writeValueAsString(book), HEADER, SC_CREATED);
@@ -42,6 +45,8 @@ public class CreateBookHandler implements RequestHandler<Map<String, String>, Ga
                 return new GatewayResponse(e.getMessage(), HEADER, SC_INTERNAL_SERVER_ERROR);
             }
         } catch (CouldNotCreateBookException e) {
+            return new GatewayResponse(e.getMessage(), HEADER, SC_INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
             return new GatewayResponse(e.getMessage(), HEADER, SC_INTERNAL_SERVER_ERROR);
         }
     }
