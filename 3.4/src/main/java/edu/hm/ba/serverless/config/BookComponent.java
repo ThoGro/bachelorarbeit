@@ -2,10 +2,7 @@ package edu.hm.ba.serverless.config;
 
 import dagger.Component;
 import edu.hm.ba.serverless.dao.BookDao;
-import edu.hm.ba.serverless.handler.CreateBookHandler;
-import edu.hm.ba.serverless.handler.DeleteBookHandler;
-import edu.hm.ba.serverless.handler.GetBookHandler;
-import edu.hm.ba.serverless.handler.GetBooksHandler;
+import edu.hm.ba.serverless.handler.*;
 
 import javax.inject.Singleton;
 
@@ -20,5 +17,7 @@ public interface BookComponent {
     void inject(GetBooksHandler requestHandler);
 
     void inject(DeleteBookHandler requestHandler);
+
+    void inject(UpdateBookHandler requestHandler);
 
 }

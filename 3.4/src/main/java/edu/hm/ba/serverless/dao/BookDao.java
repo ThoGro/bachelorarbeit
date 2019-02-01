@@ -1,8 +1,6 @@
 package edu.hm.ba.serverless.dao;
 
-import edu.hm.ba.serverless.exception.CouldNotCreateBookException;
-import edu.hm.ba.serverless.exception.TableDoesNotExistException;
-import edu.hm.ba.serverless.exception.UnableToDeleteException;
+import edu.hm.ba.serverless.exception.*;
 import edu.hm.ba.serverless.model.Book;
 import edu.hm.ba.serverless.model.request.CreateBookRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
@@ -14,6 +12,7 @@ import java.util.stream.Collectors;
 public class BookDao {
 
     private static final String BOOK_ID = "isbn";
+    private static final String UPDATE_EXPRESSION = "SET title = :t, author = :a";
 
     private final String tableName;
     private final DynamoDbClient dynamoDb;
@@ -100,6 +99,35 @@ public class BookDao {
             throw new TableDoesNotExistException("Book table " + tableName
                     + " does not exist and was deleted after reading the book");
         }
+    }
+
+    public Book updateBook(final String isbn, final Book book) {
+        if (book.getTitle().isEmpty() || book.getAuthor().isEmpty() || book.getIsbn().isEmpty()) {
+            throw new CouldNotUpdateBookException("Unable to update book with isbn " + isbn +
+                    " and specified title " + book.getTitle() + " and author " + book.getAuthor());
+        }
+        Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
+        expressionAttributeValues.put(":t", AttributeValue.builder().s(book.getTitle()).build());
+        expressionAttributeValues.put(":a", AttributeValue.builder().s(book.getAuthor()).build());
+        final UpdateItemResponse result;
+        try {
+            result = dynamoDb.updateItem(UpdateItemRequest.builder()
+                    .tableName(tableName)
+                    .key(Collections.singletonMap(BOOK_ID,
+                            AttributeValue.builder().s(book.getIsbn()).build()))
+                    .returnValues(ReturnValue.ALL_NEW)
+                    .updateExpression(UPDATE_EXPRESSION)
+                    .conditionExpression("attribute_exists(isbn)")
+                    .expressionAttributeValues(expressionAttributeValues)
+                    .build());
+        } catch (ConditionalCheckFailedException e) {
+            throw new UnableToUpdateException(
+                    "the book does not exist");
+        } catch (ResourceNotFoundException e) {
+            throw new TableDoesNotExistException("Book table " + tableName
+                    + " does not exist and was deleted after reading the book");
+        }
+        return convert(result.attributes());
     }
 
     private Book convert(final Map<String, AttributeValue> item) {

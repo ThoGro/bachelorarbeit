@@ -79,6 +79,18 @@ Resources:
                     Properties:
                         Path: /books/{isbn}
                         Method: delete
+    UpdateBookFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: target/Serverless-1.0.jar
+            Handler: edu.hm.ba.serverless.handler.UpdateBookHandler::handleRequest
+            Runtime: java8
+            Events:
+                UpdateBook:
+                    Type: Api
+                    Properties:
+                        Path: /books/{isbn}
+                        Method: put
 
 Outputs:
 
@@ -98,6 +110,18 @@ Outputs:
       Description: "GetBook Lambda Function ARN"
       Value: !GetAtt GetBookFunction.Arn
 
+    GetBooksFunction:
+        Description: "GetBooks Lambda Function ARN"
+        Value: !GetAtt GetBooksFunction.Arn
+
     CreateBookFunction:
       Description: "CreateBook Lambda Function ARN"
       Value: !GetAtt CreateBookFunction.Arn
+
+    DeleteBookFunction:
+        Description: "DeleteBook Lambda Function ARN"
+        Value: !GetAtt DeleteBookFunction.Arn
+
+    UpdateBookFunction:
+        Description: "UpdateBook Lambda Function ARN"
+        Value: !GetAtt UpdateBookFunction.Arn
