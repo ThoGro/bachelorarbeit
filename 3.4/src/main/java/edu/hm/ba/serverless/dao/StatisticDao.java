@@ -8,9 +8,7 @@ import edu.hm.ba.serverless.model.Statistic;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class StatisticDao {
@@ -25,8 +23,20 @@ public class StatisticDao {
         this.tableName = tableName;
     }
 
-    public Statistic getStatistic(int statisticId) {
-        return null;
+    public Statistic getStatistic(final Category category) {
+        try {
+            return Optional.ofNullable(
+                    dynamoDb.getItem(GetItemRequest.builder()
+                            .tableName(tableName)
+                            .key(Collections.singletonMap(STATISTIC_ID,
+                                    AttributeValue.builder().s(category.toString()).build()))
+                            .build()))
+                    .map(GetItemResponse::item)
+                    .map(this::convert)
+                    .orElse(null);
+        } catch (software.amazon.awssdk.services.dynamodb.model.ResourceNotFoundException e) {
+            throw new TableDoesNotExistException("Statistic table " + tableName + " does not exist.");
+        }
     }
 
     public List<Statistic> getStatistics() {

@@ -103,6 +103,18 @@ Resources:
                     Properties:
                         Path: /statistics
                         Method: post
+    GetStatisticFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: target/Serverless-1.0.jar
+            Handler: edu.hm.ba.serverless.handler.GetStatisticHandler::handleRequest
+            Runtime: java8
+            Events:
+                GetBook:
+                    Type: Api
+                    Properties:
+                        Path: /statistics/{category}
+                        Method: get
     GetStatisticsFunction:
         Type: AWS::Serverless::Function
         Properties:
@@ -157,3 +169,7 @@ Outputs:
     GetStatisticsFunction:
         Description: "GetStatisticsFunction Lambda Function ARN"
         Value: !GetAtt GetStatisticsFunction.Arn
+
+    GetStatisticFunction:
+        Description: "GetStatisticFunction Lambda Function ARN"
+        Value: !GetAtt GetStatisticFunction.Arn

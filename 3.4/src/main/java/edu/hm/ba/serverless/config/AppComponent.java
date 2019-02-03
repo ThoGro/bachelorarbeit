@@ -27,4 +27,6 @@ public interface AppComponent {
 
     void inject(GetStatisticsHandler requestHandler);
 
+    void inject(GetStatisticHandler requestHandler);
+
 }
