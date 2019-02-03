@@ -4,11 +4,11 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.hm.ba.serverless.config.BookComponent;
-import edu.hm.ba.serverless.config.DaggerBookComponent;
+import edu.hm.ba.serverless.config.AppComponent;
 import edu.hm.ba.serverless.dao.BookDao;
 import edu.hm.ba.serverless.model.Book;
 import edu.hm.ba.serverless.model.response.GatewayResponse;
+import edu.hm.ba.serverless.config.DaggerAppComponent;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -21,11 +21,11 @@ public class GetBookHandler implements RequestHandler<Map<String, Object>, Gatew
     @Inject
     BookDao bookDao;
 
-    private final BookComponent bookComponent;
+    private final AppComponent appComponent;
 
     public GetBookHandler() {
-        bookComponent = DaggerBookComponent.builder().build();
-        bookComponent.inject(this);
+        appComponent = DaggerAppComponent.builder().build();
+        appComponent.inject(this);
     }
 
     @Override

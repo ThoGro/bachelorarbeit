@@ -91,6 +91,18 @@ Resources:
                     Properties:
                         Path: /books/{isbn}
                         Method: put
+    CreateStatisticFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: target/Serverless-1.0.jar
+            Handler: edu.hm.ba.serverless.handler.CreateStatisticHandler::handleRequest
+            Runtime: java8
+            Events:
+                CreateBook:
+                    Type: Api
+                    Properties:
+                        Path: /statistics
+                        Method: post
 
 Outputs:
 
@@ -125,3 +137,7 @@ Outputs:
     UpdateBookFunction:
         Description: "UpdateBook Lambda Function ARN"
         Value: !GetAtt UpdateBookFunction.Arn
+
+    CreateStatisticFunction:
+        Description: "CreateStatistic Lambda Function ARN"
+        Value: !GetAtt CreateStatisticFunction.Arn
