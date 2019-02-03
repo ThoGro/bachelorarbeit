@@ -45,7 +45,7 @@ public class BookDao {
                     .tableName(tableName);
             result = dynamoDb.scan(scanBuilder.build());
         } catch (ResourceNotFoundException e) {
-            throw new TableDoesNotExistException("Book table " + tableName + "does not exist.");
+            throw new TableDoesNotExistException("Book table " + tableName + " does not exist.");
         }
         final List<Book> books = result.items().stream()
                 .map(this::convert)

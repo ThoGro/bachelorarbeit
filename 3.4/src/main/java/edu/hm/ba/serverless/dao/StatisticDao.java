@@ -6,13 +6,12 @@ import edu.hm.ba.serverless.exception.TableDoesNotExistException;
 import edu.hm.ba.serverless.model.Category;
 import edu.hm.ba.serverless.model.Statistic;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
-import software.amazon.awssdk.services.dynamodb.model.ConditionalCheckFailedException;
-import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
+import software.amazon.awssdk.services.dynamodb.model.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class StatisticDao {
 
@@ -31,7 +30,18 @@ public class StatisticDao {
     }
 
     public List<Statistic> getStatistics() {
-        return null;
+        final ScanResponse result;
+        try {
+            ScanRequest.Builder scanBuilder = ScanRequest.builder()
+                    .tableName(tableName);
+            result = dynamoDb.scan(scanBuilder.build());
+        } catch (software.amazon.awssdk.services.dynamodb.model.ResourceNotFoundException e) {
+            throw new TableDoesNotExistException("Statistic table " + tableName + " does not exist.");
+        }
+        final List<Statistic> statistics = result.items().stream()
+                .map(this::convert)
+                .collect(Collectors.toList());
+        return statistics;
     }
 
     public Statistic createStatistic(final Statistic statistic) {
@@ -73,6 +83,24 @@ public class StatisticDao {
             throw new IllegalArgumentException("count was null");
         }
         return item;
+    }
+
+    private Statistic convert(final Map<String, AttributeValue> item) {
+        if (item == null || item.isEmpty()) {
+            return null;
+        }
+        Statistic.StatisticBuilder builder = Statistic.builder();
+        try {
+            builder.category(Category.valueOf(item.get(STATISTIC_ID).s()));
+        } catch (NullPointerException e) {
+            throw new IllegalStateException("item did not have a category attribute or it was not a enum");
+        }
+        try {
+            builder.count(Integer.valueOf(item.get("count").s()));
+        } catch (NullPointerException e) {
+            throw new IllegalStateException("item did not have a count attribute or it was not a integer");
+        }
+        return builder.build();
     }
 
 }
