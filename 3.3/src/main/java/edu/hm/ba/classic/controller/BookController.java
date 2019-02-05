@@ -31,28 +31,31 @@ public class BookController {
     /**
      * Creates a new book in the service.
      * @param book the new book
+     * @return response with the status and the added book
      */
     @PostMapping(path = "/book", consumes = "application/json")
-    public void addBook(@RequestBody Book book) {
-        bookService.addBook(book);
+    public ResponseEntity<Book> addBook(@RequestBody Book book) {
+        return ResponseEntity.ok(bookService.addBook(book));
     }
 
     /**
      * Deletes a book in the service.
      * @param isbn the book to delete
+     * @return response with the status and the deleted book
      */
     @DeleteMapping(path = "/book/{isbn}")
-    public void deleteBook(@PathVariable String isbn) {
-        bookService.deleteBook(isbn);
+    public ResponseEntity<Book> deleteBook(@PathVariable String isbn) {
+        return ResponseEntity.ok(bookService.deleteBook(isbn));
     }
 
     /**
      * Updates the attributes of a book.
      * @param book the book to update
+     * @return response with the status and the updated book
      */
-    @PutMapping(path = "/book", consumes = "application/json")
-    public void updateBook(@RequestBody Book book) {
-        bookService.updateBook(book);
+    @PutMapping(path = "/book/{isbn}", consumes = "application/json")
+    public ResponseEntity<Book> updateBook(@PathVariable String isbn, @RequestBody Book book) {
+        return ResponseEntity.ok(bookService.updateBook(isbn, book));
     }
 
     /**

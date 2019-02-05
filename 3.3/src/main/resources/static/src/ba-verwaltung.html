@@ -229,7 +229,7 @@
           var author = content.shadowRoot.querySelector('#author' + isbn).value;
           var category = content.shadowRoot.querySelector('#category' + isbn).value;
           this.$.putBook.body = {isbn, title, author, category};
-          this.$.putBook.url = "http://localhost:8080/book";
+          this.$.putBook.url = "http://localhost:8080/book/" + isbn;
           this.$.putBook.generateRequest();
           content.shadowRoot.querySelector('#title' + isbn).disabled = true;
           content.shadowRoot.querySelector('#author' + isbn).disabled = true;

@@ -19,20 +19,24 @@ public interface BookService {
     /**
      * Adds a book to the service.
      * @param book the book to add
+     * @return the added book
      */
-    void addBook(Book book);
+    Book addBook(Book book);
 
     /**
      * Deletes a book from the service.
      * @param isbn the isbn of the book to delete
+     * @return the deleted book
      */
-    void deleteBook(String isbn);
+    Book deleteBook(String isbn);
 
     /**
      * Updates a book in the service.
+     * @param isbn the isbn of the book to update
      * @param book the book object with the new book informations
+     * @return the updated book
      */
-    void updateBook(Book book);
+    Book updateBook(String isbn, Book book);
 
     /**
      * Marks a book as lended. After this the lender of the book is set.
