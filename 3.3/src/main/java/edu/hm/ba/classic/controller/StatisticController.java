@@ -4,6 +4,7 @@ import edu.hm.ba.classic.entities.Statistic;
 import edu.hm.ba.classic.services.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -33,6 +34,7 @@ public class StatisticController {
      * @return response with the status and a collection with all statistics
      */
     @GetMapping("/statistics")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EMPLOYEE')")
     public ResponseEntity<Collection<Statistic>> getStatistics() {
         return ResponseEntity.ok(statisticService.getStatistics());
     }
@@ -43,6 +45,7 @@ public class StatisticController {
      * @return response with the status and the statistic for the specified category
      */
     @GetMapping("/statistic/{category}")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EMPLOYEE')")
     public ResponseEntity<Statistic> getStatistic(@PathVariable String category) {
         return ResponseEntity.ok(statisticService.getStatistic(category));
     }

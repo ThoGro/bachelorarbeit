@@ -4,6 +4,7 @@ import edu.hm.ba.classic.entities.Book;
 import edu.hm.ba.classic.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -34,6 +35,7 @@ public class BookController {
      * @return response with the status and the added book
      */
     @PostMapping(path = "/book", consumes = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EMPLOYEE')")
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
         return ResponseEntity.ok(bookService.addBook(book));
     }
@@ -44,6 +46,7 @@ public class BookController {
      * @return response with the status and the deleted book
      */
     @DeleteMapping(path = "/book/{isbn}")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EMPLOYEE')")
     public ResponseEntity<Book> deleteBook(@PathVariable String isbn) {
         return ResponseEntity.ok(bookService.deleteBook(isbn));
     }
@@ -54,6 +57,7 @@ public class BookController {
      * @return response with the status and the updated book
      */
     @PutMapping(path = "/book/{isbn}", consumes = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EMPLOYEE')")
     public ResponseEntity<Book> updateBook(@PathVariable String isbn, @RequestBody Book book) {
         return ResponseEntity.ok(bookService.updateBook(isbn, book));
     }

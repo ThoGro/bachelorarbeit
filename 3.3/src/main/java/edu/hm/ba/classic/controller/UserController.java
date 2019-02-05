@@ -5,6 +5,7 @@ import edu.hm.ba.classic.persistence.UserRepository;
 import edu.hm.ba.classic.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -25,6 +26,7 @@ public class UserController {
      * @return response with the status and a collection with all users
      */
     @GetMapping("/users")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EMPLOYEE')")
     public ResponseEntity<Collection<User>> getUsers() {
         return ResponseEntity.ok(userService.getUsers());
     }
@@ -34,6 +36,7 @@ public class UserController {
      * @param user the new user
      */
     @PostMapping(path = "/user", consumes = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void addUser(@RequestBody User user) {
         userService.addUser(user);
     }

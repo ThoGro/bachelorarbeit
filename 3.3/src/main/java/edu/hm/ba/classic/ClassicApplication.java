@@ -2,6 +2,7 @@ package edu.hm.ba.classic;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  * @author Thomas Großbeck
  */
 @SpringBootApplication
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ClassicApplication extends WebSecurityConfigurerAdapter {
 
 	private static int userId;
