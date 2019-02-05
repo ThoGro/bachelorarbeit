@@ -37,6 +37,13 @@ public class User {
     private String password;
 
     /**
+     * Role of the user.
+     */
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Role role;
+
+    /**
      * List with all lended books from the user.
      */
     @OneToMany(mappedBy = "lender")

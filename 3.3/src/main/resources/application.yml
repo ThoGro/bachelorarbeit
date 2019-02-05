@@ -4,7 +4,7 @@ spring:
   h2:
     console:
       enabled: true
-      path: /console
+      path: /h2-console
   jpa:
     hibernate:
       ddl-auto: validate
