@@ -65,7 +65,6 @@ public class BookServiceImpl implements BookService {
         if (toDelete == null) {
             throw new BookDoesNotExistException("The book with isbn " + isbn + " can not be found.");
         }
-        //bookRepository.delete(toDelete);
         bookRepository.deleteById(isbn);
         return toDelete.orElse(null);
     }
