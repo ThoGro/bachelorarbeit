@@ -90,7 +90,14 @@
             </tr>
             <template is="dom-repeat" items="{{books}}">
               <tr>
-                <td><paper-checkbox id="[[item.isbn]]"></paper-checkbox></td>
+                <td>
+                  <template is="dom-if" if="[[item.lender]]">
+                    <paper-checkbox id="[[item.isbn]]" disabled></paper-checkbox>
+                  </template>
+                  <template is="dom-if" if="[[!item.lender]]">
+                    <paper-checkbox id="[[item.isbn]]"></paper-checkbox>
+                  </template>
+                </td>
                 <td>[[item.isbn]]</td>
                 <td>[[item.title]]</td>
                 <td>[[item.author]]</td>
@@ -119,7 +126,14 @@
                 <td><paper-input id="title[[item.isbn]]" disabled value="[[item.title]]"></paper-input></td>
                 <td><paper-input id="author[[item.isbn]]" disabled value="[[item.author]]"></paper-input></td>
                 <td><paper-input id="category[[item.isbn]]" disabled value="[[item.category]]"></paper-input></td>
-                <td><paper-icon-button id="[[item.isbn]]" icon="create" on-click="edit"></paper-icon-button></td>
+                <td>
+                  <template is="dom-if" if="[[item.lender]]">
+                    <paper-icon-button id="[[item.isbn]]" icon="create" on-click="edit" disabled></paper-icon-button>
+                  </template>
+                  <template is="dom-if" if="[[!item.lender]]">
+                    <paper-icon-button id="[[item.isbn]]" icon="create" on-click="edit"></paper-icon-button>
+                  </template>
+                </td>
                 <td><paper-icon-button id="save[[item.isbn]]" icon="save" on-click="saveEdit" disabled></paper-icon-button></td>
               </tr>
             </template>

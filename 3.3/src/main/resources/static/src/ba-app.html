@@ -85,11 +85,11 @@
       <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="ausleihe" href="[[rootPath]]ausleihe">Bücherausleihe</a>
+          <a name="ausleihe" href="[[rootPath]]ausleihe" on-click="getBooks">Bücherausleihe</a>
           <a name="rueckgabe" href="[[rootPath]]rueckgabe">Bücherrückgabe</a>
           <a name="verwaltung" href="[[rootPath]]verwaltung">Bücherverwaltung</a>
           <a name="kunden" href="[[rootPath]]kunden">Kundenverwaltung</a>
-          <a name="statistic" href="[[rootPath]]statistic">Nutzerstatistik</a>
+          <a name="statistic" href="[[rootPath]]statistic" on-click="getStatistics">Nutzerstatistik</a>
         </iron-selector>
       </app-drawer>
 
@@ -108,11 +108,11 @@
             attr-for-selected="name"
             fallback-selection="view404"
             role="main">
-          <ba-ausleihe name="ausleihe"></ba-ausleihe>
+          <ba-ausleihe id="ausleihe" name="ausleihe"></ba-ausleihe>
           <ba-rueckgabe name="rueckgabe"></ba-rueckgabe>
           <ba-verwaltung name="verwaltung"></ba-verwaltung>
           <ba-kunden name="kunden"></ba-kunden>
-          <ba-statistic name="statistic"></ba-statistic>
+          <ba-statistic id="statistic" name="statistic"></ba-statistic>
           <ba-view404 name="view404"></ba-view404>
         </iron-pages>
       </app-header-layout>
@@ -185,6 +185,14 @@
           } else {
               alert("#showToast doesn't support type " + type);
           }
+      }
+
+      getBooks() {
+          this.$.ausleihe.getBooks();
+      }
+
+      getStatistics() {
+        this.$.statistic.getStatistics();
       }
 
     }

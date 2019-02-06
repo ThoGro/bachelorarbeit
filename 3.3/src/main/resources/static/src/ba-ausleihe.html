@@ -123,6 +123,7 @@
                   category = book.category;
               }
           });
+          this.getBooks();
           this.$.statistic.url = HOST + "/statistics/" + category;
           this.$.statistic.generateRequest();
       }
@@ -130,6 +131,10 @@
       errorLend(event) {
           console.log(event);
           showToast(this, "Die Ausleihe konnte nicht durchgeführt werden.", TOAST_TYPE.ERROR);
+      }
+
+      getBooks() {
+        this.$.getBooks.generateRequest();
       }
 
       responseBooks(event) {

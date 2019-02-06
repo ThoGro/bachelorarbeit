@@ -54,6 +54,10 @@
                 this.shadowRoot.querySelector('#getStatistics').url = HOST + "/statistics";
             }
 
+            getStatistics() {
+                this.$.getStatistics.generateRequest();
+            }
+
             responseStatistics(event) {
                 this.statistics = JSON.parse(event.detail.response);
                 console.log(event);
