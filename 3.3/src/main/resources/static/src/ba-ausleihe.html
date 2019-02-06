@@ -25,7 +25,6 @@
         auto
         id="getBooks"
         method="get"
-        url="http://localhost:8080/books"
         handle-as="application/json"
         on-response="responseBooks"
         on-error="errorBooks">
@@ -97,12 +96,17 @@
           }
       }
 
+      ready() {
+        super.ready();
+        this.shadowRoot.querySelector('#getBooks').url = HOST + "/books";
+      }
+
       ausleihen() {
           var checkboxes = this.shadowRoot.querySelectorAll('paper-checkbox');
           checkboxes.forEach((checkbox) => {
              if (checkbox.checked) {
                  var user = {"id":"1","username":"Admin","password":"admin"}; //angemeldeter Nutzer
-                 this.$.lend.url = "http://localhost:8080/lend/" + user.id + "/" + checkbox.id;
+                 this.$.lend.url = HOST + "/lend/" + user.id + "/" + checkbox.id;
                  checkbox.checked = false;
                  this.$.lend.generateRequest();
              }
@@ -119,7 +123,7 @@
                   category = book.category;
               }
           });
-          this.$.statistic.url = "http://localhost:8080/statistic/" + category;
+          this.$.statistic.url = HOST + "/statistics/" + category;
           this.$.statistic.generateRequest();
       }
 

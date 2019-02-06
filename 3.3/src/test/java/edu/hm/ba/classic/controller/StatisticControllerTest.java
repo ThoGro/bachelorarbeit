@@ -89,7 +89,7 @@ public class StatisticControllerTest {
     @WithMockUser(authorities = "EMPLOYEE")
     public void testGetStatistic() throws Exception {
         when(statisticService.getStatistic("SCIENCE")).thenReturn(STATISTIC);
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/statistic/SCIENCE");
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/statistics/SCIENCE");
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         assertEquals(200, result.getResponse().getStatus());
         assertEquals("{\"id\":1,\"count\":34,\"category\":\"SCIENCE\"}", result.getResponse().getContentAsString());
@@ -100,7 +100,7 @@ public class StatisticControllerTest {
     public void testGetStatisticAccessDenied() throws Exception {
         exception.expectCause(IsInstanceOf.<Throwable>instanceOf(AccessDeniedException.class));
         when(statisticService.getStatistic("SCIENCE")).thenReturn(STATISTIC);
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/statistic/SCIENCE");
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/statistics/SCIENCE");
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
     }
 

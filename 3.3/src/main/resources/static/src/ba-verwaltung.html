@@ -26,7 +26,6 @@
     <iron-ajax
             id="postBook"
             method="post"
-            url="http://localhost:8080/book"
             content-type="application/json"
             handle-as="application/json"
             on-response="responseAdd"
@@ -54,7 +53,6 @@
     <iron-ajax
             id="getBooks"
             method="get"
-            url="http://localhost:8080/books"
             handle-as="application/json"
             on-response="responseBooks"
             on-error="errorBooks">
@@ -163,7 +161,8 @@
           this.newcategory = "";
           console.log(body);
           this.$.postBook.body = body;
-          this.$.postBook.generateRequest();
+          this.$.postBook.url = HOST + "/books";
+                  this.$.postBook.generateRequest();
           this.$.addBook.opened = false;
       }
 
@@ -178,6 +177,7 @@
       }
 
       loeschen() {
+          this.$.getBooks.url = HOST + "/books";
           this.$.getBooks.generateRequest();
           this.$.deleteBook.opened = true;
       }
@@ -191,7 +191,7 @@
           checkboxes.forEach((checkbox) => {
               if (checkbox.checked) {
                   console.log(checkbox.id, " wird gelöscht");
-                  this.$.delBook.url = "http://localhost:8080/book/" + checkbox.id;
+                  this.$.delBook.url = HOST + "/books/" + checkbox.id;
                   this.$.delBook.generateRequest();
                   checkbox.checked = false;
               }
@@ -210,6 +210,7 @@
       }
 
       bearbeiten() {
+          this.$.getBooks.url = HOST + "/books";
           this.$.getBooks.generateRequest();
           this.$.editBook.opened = true;
       }
@@ -229,7 +230,7 @@
           var author = content.shadowRoot.querySelector('#author' + isbn).value;
           var category = content.shadowRoot.querySelector('#category' + isbn).value;
           this.$.putBook.body = {isbn, title, author, category};
-          this.$.putBook.url = "http://localhost:8080/book/" + isbn;
+          this.$.putBook.url = HOST + "/books/" + isbn;
           this.$.putBook.generateRequest();
           content.shadowRoot.querySelector('#title' + isbn).disabled = true;
           content.shadowRoot.querySelector('#author' + isbn).disabled = true;

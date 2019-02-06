@@ -17,7 +17,6 @@
                 auto
                 id="getStatistics"
                 method="get"
-                url="http://localhost:8080/statistics"
                 content-type="application/json"
                 handle-as="application/json"
                 on-response="responseStatistics"
@@ -48,6 +47,11 @@
                 return {
                     statistics: Array
                 }
+            }
+
+            ready() {
+                super.ready();
+                this.shadowRoot.querySelector('#getStatistics').url = HOST + "/statistics";
             }
 
             responseStatistics(event) {

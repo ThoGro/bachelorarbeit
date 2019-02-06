@@ -24,7 +24,7 @@ public class StatisticController {
      * Increments the counter for the statistic with the specified category.
      * @param category the category of the statistic to increment
      */
-    @PostMapping(path = "/statistic/{category}")
+    @PostMapping(path = "/statistics/{category}")
     public void count(@PathVariable String category) {
         statisticService.count(category);
     }
@@ -44,7 +44,7 @@ public class StatisticController {
      * @param category the category from the required statistic
      * @return response with the status and the statistic for the specified category
      */
-    @GetMapping("/statistic/{category}")
+    @GetMapping("/statistics/{category}")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EMPLOYEE')")
     public ResponseEntity<Statistic> getStatistic(@PathVariable String category) {
         return ResponseEntity.ok(statisticService.getStatistic(category));

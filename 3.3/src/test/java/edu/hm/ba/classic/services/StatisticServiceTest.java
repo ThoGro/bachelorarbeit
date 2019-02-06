@@ -52,7 +52,7 @@ public class StatisticServiceTest {
 
     @Test
     public void testCount() {
-        
+
     }
 
 }

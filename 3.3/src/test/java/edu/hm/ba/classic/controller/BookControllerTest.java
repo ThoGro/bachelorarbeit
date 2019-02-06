@@ -75,7 +75,7 @@ public class BookControllerTest {
     @WithMockUser(authorities = "EMPLOYEE")
     public void testAddBook() throws Exception {
         when(bookService.addBook(BOOK)).thenReturn(BOOK);
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/book")
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/books")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"isbn\":\"1234567890000\",\"title\":\"TestBuch1\",\"author\":\"TestAutor\",\"category\":\"SCIENCE\"}");
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
@@ -89,7 +89,7 @@ public class BookControllerTest {
     public void testAddBookAccessDenied() throws Exception {
         exception.expectCause(IsInstanceOf.<Throwable>instanceOf(AccessDeniedException.class));
         when(bookService.addBook(BOOK)).thenReturn(BOOK);
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/book")
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/books")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"isbn\":\"1234567890000\",\"title\":\"TestBuch1\",\"author\":\"TestAutor\",\"category\":\"SCIENCE\"}");
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
@@ -99,7 +99,7 @@ public class BookControllerTest {
     @WithMockUser(authorities = "EMPLOYEE")
     public void testUpdateBook() throws Exception {
         when(bookService.updateBook(BOOK.getIsbn(), BOOK)).thenReturn(BOOK);
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/book/1234567890000")
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/books/1234567890000")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"isbn\":\"1234567890000\",\"title\":\"TestBuch1\",\"author\":\"TestAutor\",\"category\":\"SCIENCE\"}");
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
@@ -113,7 +113,7 @@ public class BookControllerTest {
     public void testUpdateBookAccessDenied() throws Exception {
         exception.expectCause(IsInstanceOf.<Throwable>instanceOf(AccessDeniedException.class));
         when(bookService.updateBook(BOOK.getIsbn(), BOOK)).thenReturn(BOOK);
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/book/1234567890000")
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/books/1234567890000")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"isbn\":\"1234567890000\",\"title\":\"TestBuch1\",\"author\":\"TestAutor\",\"category\":\"SCIENCE\"}");
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
@@ -123,7 +123,7 @@ public class BookControllerTest {
     @WithMockUser(authorities = "EMPLOYEE")
     public void testDeleteBook() throws Exception {
         when(bookService.deleteBook(BOOK.getIsbn())).thenReturn(BOOK);
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/book/1234567890000");
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/books/1234567890000");
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         assertEquals(200, result.getResponse().getStatus());
         assertEquals("{\"isbn\":\"1234567890000\",\"title\":\"TestBuch1\",\"author\":\"TestAutor\",\"category\":\"SCIENCE\",\"lender\":null}",
@@ -135,7 +135,7 @@ public class BookControllerTest {
     public void testDeleteBookAccessDenied() throws Exception {
         exception.expectCause(IsInstanceOf.<Throwable>instanceOf(AccessDeniedException.class));
         when(bookService.deleteBook(BOOK.getIsbn())).thenReturn(BOOK);
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/book/1234567890000");
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/books/1234567890000");
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
     }
 

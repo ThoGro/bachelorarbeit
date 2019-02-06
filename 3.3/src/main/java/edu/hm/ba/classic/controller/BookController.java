@@ -34,7 +34,7 @@ public class BookController {
      * @param book the new book
      * @return response with the status and the added book
      */
-    @PostMapping(path = "/book", consumes = "application/json")
+    @PostMapping(path = "/books", consumes = "application/json")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EMPLOYEE')")
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
         return ResponseEntity.ok(bookService.addBook(book));
@@ -45,7 +45,7 @@ public class BookController {
      * @param isbn the book to delete
      * @return response with the status and the deleted book
      */
-    @DeleteMapping(path = "/book/{isbn}")
+    @DeleteMapping(path = "/books/{isbn}")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EMPLOYEE')")
     public ResponseEntity<Book> deleteBook(@PathVariable String isbn) {
         return ResponseEntity.ok(bookService.deleteBook(isbn));
@@ -56,7 +56,7 @@ public class BookController {
      * @param book the book to update
      * @return response with the status and the updated book
      */
-    @PutMapping(path = "/book/{isbn}", consumes = "application/json")
+    @PutMapping(path = "/books/{isbn}", consumes = "application/json")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EMPLOYEE')")
     public ResponseEntity<Book> updateBook(@PathVariable String isbn, @RequestBody Book book) {
         return ResponseEntity.ok(bookService.updateBook(isbn, book));
