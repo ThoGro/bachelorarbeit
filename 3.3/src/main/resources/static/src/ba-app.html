@@ -86,7 +86,7 @@
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="ausleihe" href="[[rootPath]]ausleihe" on-click="getBooks">Bücherausleihe</a>
-          <a name="rueckgabe" href="[[rootPath]]rueckgabe">Bücherrückgabe</a>
+          <a name="rueckgabe" href="[[rootPath]]rueckgabe" on-click="getLoans">Bücherrückgabe</a>
           <a name="verwaltung" href="[[rootPath]]verwaltung">Bücherverwaltung</a>
           <a name="kunden" href="[[rootPath]]kunden">Kundenverwaltung</a>
           <a name="statistic" href="[[rootPath]]statistic" on-click="getStatistics">Nutzerstatistik</a>
@@ -109,7 +109,7 @@
             fallback-selection="view404"
             role="main">
           <ba-ausleihe id="ausleihe" name="ausleihe"></ba-ausleihe>
-          <ba-rueckgabe name="rueckgabe"></ba-rueckgabe>
+          <ba-rueckgabe id="rueckgabe" name="rueckgabe"></ba-rueckgabe>
           <ba-verwaltung name="verwaltung"></ba-verwaltung>
           <ba-kunden name="kunden"></ba-kunden>
           <ba-statistic id="statistic" name="statistic"></ba-statistic>
@@ -193,6 +193,10 @@
 
       getStatistics() {
         this.$.statistic.getStatistics();
+      }
+
+      getLoans() {
+        this.$.rueckgabe.getLoans();
       }
 
     }

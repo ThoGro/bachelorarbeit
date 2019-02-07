@@ -1,6 +1,8 @@
 package edu.hm.ba.classic.services;
 
 import edu.hm.ba.classic.entities.Book;
+import edu.hm.ba.classic.entities.User;
+import org.springframework.security.core.Authentication;
 
 import java.util.Collection;
 
@@ -39,17 +41,26 @@ public interface BookService {
     Book updateBook(String isbn, Book book);
 
     /**
-     * Marks a book as lended. After this the lender of the book is set.
-     * @param userid the id of the user who lends the book
-     * @param isbn the isbn of the lended book
+     * Marks a book as lent. After this the lender of the book is set.
+     * @param isbn the isbn of the lent book
+     * @param authentication authentication object containing the active user
+     * @return the lender
      */
-    void lendBook(int userid, String isbn);
+    User lendBook(String isbn, Authentication authentication);
 
     /**
-     * Unmarks a lended book. After this the book is available and the lender of the book is null.
-     * @param userid the id of the user who returns the book
+     * Unmarks a lent book. After this the book is available and the lender of the book is null.
      * @param isbn the isbn of the returned book
+     * @param authentication authentication object containing the active user
+     * @return the returner
      */
-    void returnBook(int userid, String isbn);
+    User returnBook(String isbn, Authentication authentication);
+
+    /**
+     * Returns all lent books for a specific user.
+     * @param authentication authentication object containing the active user
+     * @return collection with all lent books
+     */
+    Collection<Book> getLoans(Authentication authentication);
 
 }

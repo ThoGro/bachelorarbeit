@@ -1,10 +1,12 @@
 package edu.hm.ba.classic.controller;
 
 import edu.hm.ba.classic.entities.Book;
+import edu.hm.ba.classic.entities.User;
 import edu.hm.ba.classic.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -64,22 +66,34 @@ public class BookController {
 
     /**
      * Sets the lender for a book.
-     * @param userid the id of the user who lends the book
-     * @param isbn the isbn of the lended book
+     * @param isbn the isbn of the lent book
+     * @param authentication authentication object containing the active user
+     * @return response with the status and the lender
      */
-    @PutMapping(path = "/lend/{userid}/{isbn}")
-    public void lendBook(@PathVariable int userid, @PathVariable String isbn) {
-       bookService.lendBook(userid, isbn);
+    @PutMapping(path = "/lend/{isbn}")
+    public ResponseEntity<User> lendBook(@PathVariable String isbn, Authentication authentication) {
+        return ResponseEntity.ok(bookService.lendBook(isbn, authentication));
     }
 
     /**
      * Resets the lender of a book.
-     * @param userid the id of the user who returns the book
      * @param isbn the isbn of the returned book
+     * @param authentication authentication object containing the active user
+     * @return response with the status and the returner
      */
-    @PutMapping(path = "/return/{userid}/{isbn}")
-    public void returnBook(@PathVariable int userid, @PathVariable String isbn) {
-        bookService.returnBook(userid, isbn);
+    @PutMapping(path = "/return/{isbn}")
+    public ResponseEntity<User> returnBook(@PathVariable String isbn, Authentication authentication) {
+        return ResponseEntity.ok(bookService.returnBook(isbn, authentication));
+    }
+
+    /**
+     * Returns all lent books for a specific user.
+     * @param authentication authentication object containing the active user
+     * @return response with the status and a collection with the lent books
+     */
+    @GetMapping(path = "/lend")
+    public ResponseEntity<Collection<Book>> getLoans(Authentication authentication) {
+        return ResponseEntity.ok(bookService.getLoans(authentication));
     }
 
 }

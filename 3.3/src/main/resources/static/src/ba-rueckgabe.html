@@ -12,9 +12,45 @@
         padding: 10px;
       }
     </style>
+
+    <iron-ajax
+            auto
+            id="getLoans"
+            method="get"
+            handle-as="application/json"
+            on-response="responseLoans"
+            on-error="errorLoans">
+    </iron-ajax>
+
+    <iron-ajax
+            id="return"
+            method="put"
+            handle-as="application/json"
+            on-response="responseReturn"
+            on-error="errorReturn">
+    </iron-ajax>
+
     <paper-card>
       <h1>Bücherrückgabe</h1>
-      Liste der ausgeliehenen Bücher des Benutzers
+      <table class="full-width">
+        <tr>
+          <th>Zurückgeben</th>
+          <th>ISBN</th>
+          <th>Titel</th>
+          <th>Author</th>
+          <th>Kategorie</th>
+        </tr>
+        <template is="dom-repeat" items="{{books}}">
+          <tr>
+            <td><paper-checkbox id="[[item.isbn]]"></paper-checkbox></td>
+            <td>[[item.isbn]]</td>
+            <td>[[item.title]]</td>
+            <td>[[item.author]]</td>
+            <td>[[item.category]]</td>
+          </tr>
+        </template>
+      </table>
+      <br>
       <paper-button on-click="zurueckgeben">Zurückgeben</paper-button>
     </paper-card>
   </template>
@@ -22,10 +58,54 @@
   <script>
     class Rueckgabe extends Polymer.Element {
       static get is() { return 'ba-rueckgabe'; }
+      static get properties() {
+        return {
+          books: Array
+        }
+      }
+
+      ready() {
+        super.ready();
+        this.shadowRoot.querySelector('#getLoans').url = HOST + "/lend";
+      }
 
       zurueckgeben() {
           console.log("Zurückgeben");
+          var checkboxes = this.shadowRoot.querySelectorAll('paper-checkbox');
+          checkboxes.forEach((checkbox) => {
+            if (checkbox.checked) {
+              this.$.return.url = HOST + "/return/" + checkbox.id;
+              checkbox.checked = false;
+              this.$.return.generateRequest();
+            }
+          });
       }
+
+      getLoans() {
+        this.$.getLoans.generateRequest();
+      }
+
+      responseLoans(event) {
+          this.books = JSON.parse(event.detail.response);
+          console.log(event);
+      }
+
+      errorLoans(event) {
+          console.log(event);
+          showToast(this, "Die ausgeliehenen Bücher konnten nicht geladen werden.", TOAST_TYPE.ERROR);
+      }
+
+      responseReturn(event) {
+        console.log(event);
+        showToast(this, "Die Rückgabe wurde durchgeführt.", TOAST_TYPE.SUCCESS);
+        this.getLoans();
+      }
+
+      errorReturn(event) {
+        console.log(event);
+        showToast(this, "Die Rückgabe konnte nicht durchgeführt werden.", TOAST_TYPE.ERROR);
+      }
+
     }
 
     window.customElements.define(Rueckgabe.is, Rueckgabe);

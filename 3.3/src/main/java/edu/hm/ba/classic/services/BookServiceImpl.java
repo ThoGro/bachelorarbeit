@@ -4,10 +4,12 @@ import edu.hm.ba.classic.entities.Book;
 import edu.hm.ba.classic.entities.User;
 import edu.hm.ba.classic.exception.BookDoesNotExistException;
 import edu.hm.ba.classic.exception.CouldNotCreateBookException;
+import edu.hm.ba.classic.exception.CouldNotLendBookException;
 import edu.hm.ba.classic.exception.DuplicateBookException;
 import edu.hm.ba.classic.persistence.BookRepository;
 import edu.hm.ba.classic.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -83,25 +85,39 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void lendBook(int userid, String isbn) {
-        if (userRepository.existsById(userid) && bookRepository.existsById(isbn)) {
+    public User lendBook(String isbn, Authentication authentication) {
+        if (bookRepository.existsById(isbn)) {
             Book toLend = bookRepository.getOne(isbn);
-            User lender = userRepository.getOne(userid);
+            User lender = userRepository.findUserByUsername(authentication.getName());
             toLend.setLender(lender);
             bookRepository.save(toLend);
+            return lender;
+        } else {
+            throw new CouldNotLendBookException("Book " + isbn + " could not be lent from user " + authentication.getName());
         }
     }
 
     @Override
-    public void returnBook(int userid, String isbn) {
-        if (userRepository.existsById(userid) && bookRepository.existsById(isbn)) {
+    public User returnBook(String isbn, Authentication authentication) {
+        if (bookRepository.existsById(isbn)) {
             Book toReturn = bookRepository.getOne(isbn);
-            User returner = userRepository.getOne(userid);
-            if (toReturn.getLender() == null || toReturn.getLender().equals(returner)) {
+            User returner = userRepository.findUserByUsername(authentication.getName());
+            if (toReturn.getLender() != null || !toReturn.getLender().equals(returner)) {
                 toReturn.setLender(null);
                 bookRepository.save(toReturn);
+                return returner;
+            } else {
+                throw new CouldNotLendBookException("Book " + isbn + " could not be returned from user " + authentication.getName());
             }
+        } else {
+            throw new CouldNotLendBookException("Book " + isbn + " could not be returned from user " + authentication.getName());
         }
+    }
+
+    @Override
+    public Collection<Book> getLoans(Authentication authentication) {
+        User lender = userRepository.findUserByUsername(authentication.getName());
+        return bookRepository.findBooksByLender(lender);
     }
 
     /**

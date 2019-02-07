@@ -44,7 +44,7 @@ public class User {
     private Role role;
 
     /**
-     * List with all lended books from the user.
+     * List with all lent books from the user.
      */
     @OneToMany(mappedBy = "lender")
     @JsonBackReference
