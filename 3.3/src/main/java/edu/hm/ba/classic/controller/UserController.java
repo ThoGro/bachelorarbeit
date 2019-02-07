@@ -1,11 +1,11 @@
 package edu.hm.ba.classic.controller;
 
 import edu.hm.ba.classic.entities.User;
-import edu.hm.ba.classic.persistence.UserRepository;
 import edu.hm.ba.classic.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -22,23 +22,13 @@ public class UserController {
     UserService userService;
 
     /**
-     * Lists all users.
-     * @return response with the status and a collection with all users
+     * Returns the active user.
+     * @param authentication authentication object containing the active user
+     * @return active user.
      */
-    @GetMapping("/users")
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EMPLOYEE')")
-    public ResponseEntity<Collection<User>> getUsers() {
-        return ResponseEntity.ok(userService.getUsers());
-    }
-
-    /**
-     * Creates a new user in the service.
-     * @param user the new user
-     */
-    @PostMapping(path = "/user", consumes = "application/json")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public void addUser(@RequestBody User user) {
-        userService.addUser(user);
+    @GetMapping("/user")
+    public ResponseEntity<User> getActiveUser(Authentication authentication) {
+        return ResponseEntity.ok(userService.getUser(authentication));
     }
 
 }

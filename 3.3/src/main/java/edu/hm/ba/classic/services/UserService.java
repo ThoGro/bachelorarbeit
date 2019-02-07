@@ -1,6 +1,7 @@
 package edu.hm.ba.classic.services;
 
 import edu.hm.ba.classic.entities.User;
+import org.springframework.security.core.Authentication;
 
 import java.util.Collection;
 
@@ -11,15 +12,10 @@ import java.util.Collection;
 public interface UserService {
 
     /**
-     * Returns all users.
-     * @return collection with all users
+     * Returns the active user.
+     * @param authentication authentication object containing the active user
+     * @return the active user
      */
-    Collection<User> getUsers();
-
-    /**
-     * Adds a user to the service.
-     * @param user the user to add
-     */
-    void addUser(User user);
+    User getUser(Authentication authentication);
 
 }
