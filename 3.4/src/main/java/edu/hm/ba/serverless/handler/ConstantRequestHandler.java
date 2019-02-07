@@ -14,6 +14,9 @@ public interface ConstantRequestHandler {
     Map<String, String> HEADER = new HashMap<String, String>() {{
         put("Content-Type", "application/json");
         put("X-Custom-Header", "application/json");
+        put("Access-Control-Allow-Origin", "*");
+        put("Access-Control-Allow-Headers", "Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-requested-with");
+        put("Access-Control-Allow-Methods", "POST,GET,PUT,DELETE,OPTIONS");
     }};
 
 }
