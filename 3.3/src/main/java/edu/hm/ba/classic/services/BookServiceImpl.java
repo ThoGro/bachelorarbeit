@@ -117,7 +117,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Collection<Book> getLoans(Authentication authentication) {
         User lender = userRepository.findUserByUsername(authentication.getName());
-        return bookRepository.findBooksByLender(lender);
+        return lender.getLendings();
     }
 
     /**

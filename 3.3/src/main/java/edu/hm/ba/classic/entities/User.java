@@ -2,6 +2,7 @@ package edu.hm.ba.classic.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,6 +13,7 @@ import java.util.List;
  * @author Thoams Großbeck
  */
 @Data
+@ToString(exclude = "lendings")
 @Entity
 public class User {
 

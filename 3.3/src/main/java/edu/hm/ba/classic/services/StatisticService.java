@@ -1,5 +1,6 @@
 package edu.hm.ba.classic.services;
 
+import edu.hm.ba.classic.entities.Category;
 import edu.hm.ba.classic.entities.Statistic;
 
 import java.util.Collection;
@@ -13,8 +14,9 @@ public interface StatisticService {
     /**
      * Increments the statistic counter for the specified category.
      * @param category the category for which the counter is incremented
+     * @return the incremented statistic
      */
-    void count(String category);
+    Statistic count(Category category);
 
     /**
      * Returns all statistics.

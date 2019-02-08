@@ -1,5 +1,6 @@
 package edu.hm.ba.classic.controller;
 
+import edu.hm.ba.classic.entities.Category;
 import edu.hm.ba.classic.entities.Statistic;
 import edu.hm.ba.classic.services.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,11 @@ public class StatisticController {
     /**
      * Increments the counter for the statistic with the specified category.
      * @param category the category of the statistic to increment
+     * @return response with the status and the incremented statistic
      */
     @PostMapping(path = "/statistics/{category}")
-    public void count(@PathVariable String category) {
-        statisticService.count(category);
+    public ResponseEntity<Statistic> count(@PathVariable String category) {
+        return ResponseEntity.ok(statisticService.count(Category.valueOf(category)));
     }
 
     /**

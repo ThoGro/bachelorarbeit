@@ -22,11 +22,11 @@ public class StatisticServiceImpl implements StatisticService {
     StatisticRepository statisticRepository;
 
     @Override
-    public void count(String category) {
-        Statistic statistic = statisticRepository.getStatisticByCategory(Category.valueOf(category));
+    public Statistic count(Category category) {
+        Statistic statistic = statisticRepository.getStatisticByCategory(category);
         int newCount = statistic.getCount() + 1;
         statistic.setCount(newCount);
-        statisticRepository.save(statistic);
+        return statisticRepository.save(statistic);
     }
 
     @Override
