@@ -146,26 +146,51 @@
   </template>
 
   <script>
+    /**
+     * Provides the functionality to add, update or delete books for employees.
+     * Each function is represented by a button that opens a dialog for interaction with the user.
+     * @customElement
+     * @polymer
+     */
     class Verwaltung extends Polymer.Element {
       static get is() { return 'ba-verwaltung'; }
       static get properties() {
           return {
+              /** Isbn of the new book. */
               newisbn: String,
+              /** Title of the new book. */
               newtitle: String,
+              /** Author of the new book. */
               newauthor: String,
+              /** Category number of the new book. */
               newcategory: String,
+              /** Array with all books. */
               books: Array
           }
       }
 
+      /**
+       * Opens the dialog for adding a book.
+       * @param e click event
+       */
       hinzufuegen(e) {
           this.$.addBook.opened = true;
       }
 
+      /**
+       * Closes the dialog for adding a book.
+       * @param event click event
+       * @private
+       */
       _cancelAdd(event) {
           this.$.addBook.opened = false;
       }
 
+      /**
+       * Sends the request for adding a new book with the specified attributes out of the input fields.
+       * @param e click event
+       * @private
+       */
       _addAccept(e) {
           var body = {isbn: this.newisbn, title: this.newtitle, author: this.newauthor, category: this.newcategory};
           this.newisbn = "";
@@ -179,26 +204,48 @@
           this.$.addBook.opened = false;
       }
 
+      /**
+       * Returns a success message for the added book.
+       * @param event response object
+       */
       responseAdd(event) {
           console.log(event);
           showToast(this, "Das Buch wurde erfolgreich hinzugefügt.", TOAST_TYPE.SUCCESS);
       }
 
+      /**
+       * Returns an error message, if the addBook request failed.
+       * @param event response object
+       */
       errorAdd(event) {
           console.log(event);
           showToast(this, "Das Buch konnte nicht hinzugefügt werden.", TOAST_TYPE.ERROR);
       }
 
+      /**
+       * Opens the dialog for deleting a book.
+       * Loads all books to give an overview of all books that can be deleted.
+       */
       loeschen() {
           this.$.getBooks.url = HOST + "/books";
           this.$.getBooks.generateRequest();
           this.$.deleteBook.opened = true;
       }
 
+      /**
+       * Closes the dialog for deleting a book.
+       * @param event click event
+       * @private
+       */
       _cancelDelete(event) {
           this.$.deleteBook.opened = false;
       }
 
+      /**
+       * Checks all checkboxes and deletes the selected books.
+       * @param e click event
+       * @private
+       */
       _deleteAccept(e) {
           var checkboxes = document.querySelector('vaadin-dialog-overlay').$.content.shadowRoot.querySelectorAll('paper-checkbox');
           checkboxes.forEach((checkbox) => {
@@ -212,22 +259,38 @@
           this.$.deleteBook.opened = false;
       }
 
+      /**
+       * Returns a success message for the deleted book.
+       * @param event response object
+       */
       responseDelete(event) {
           console.log(event);
           showToast(this, "Die Löschung war erfolgreich.", TOAST_TYPE.SUCCESS);
       }
 
+      /**
+       * Returns an error message, if the deleteBook request failed.
+       * @param event response object
+       */
       errorDelete(event) {
           console.log(event);
           showToast(this, "Die Löschung war nicht erfolgreich.", TOAST_TYPE.ERROR);
       }
 
+      /**
+       * Opens the dialog for updating a book.
+       * Loads all books to give an overview of all books that can be updated.
+       */
       bearbeiten() {
           this.$.getBooks.url = HOST + "/books";
           this.$.getBooks.generateRequest();
           this.$.editBook.opened = true;
       }
 
+      /**
+       * Enables all input fields for the selected book to update the attributes.
+       * @param event click event
+       */
       edit(event) {
           var content = document.querySelector('vaadin-dialog-overlay').$.content;
           content.shadowRoot.querySelector('#title' + event.target.id).disabled = false;
@@ -236,6 +299,10 @@
           content.shadowRoot.querySelector('#save' + event.target.id).disabled = false;
       }
 
+      /**
+       * Saves the updated attributes for the selected book.
+       * @param event click event
+       */
       saveEdit(event) {
           var isbn = event.target.id.substr(event.target.id.length - 13);
           var content = document.querySelector('vaadin-dialog-overlay').$.content;
@@ -251,24 +318,45 @@
           content.shadowRoot.querySelector('#save' + isbn).disabled = true;
       }
 
+      /**
+       * Returns a success message for the updated book.
+       * @param event response object
+       */
       responseEdit(event) {
           console.log(event);
           showToast(this, "Das Buch wurde erfolgreich bearbeitet.", TOAST_TYPE.SUCCESS);
       }
 
+      /**
+       * Returns an error message, if the updateBook request failed.
+       * @param event response object
+       */
       errorEdit(event) {
           console.log(event);
           showToast(this, "Das Buch konnte nicht bearbeitet werden.", TOAST_TYPE.ERROR);
       }
 
+      /**
+       * Closes the dialog for editing a book.
+       * @param event click event
+       * @private
+       */
       _cancelEdit(event) {
           this.$.editBook.opened = false;
       }
 
+      /**
+       * Saves all books.
+       * @param event response object
+       */
       responseBooks(event) {
           this.books = JSON.parse(event.detail.response);
       }
 
+      /**
+       * Returns an error message, if the getBooks request failed.
+       * @param event response object
+       */
       errorBooks(event) {
           console.log(event);
           showToast(this, "Die Bücher konnten nicht geladen werden.", TOAST_TYPE.ERROR);

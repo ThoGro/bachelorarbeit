@@ -88,19 +88,32 @@
   </template>
 
   <script>
+    /**
+     * Overview of all available books.
+     * The user can lend as many books as he likes.
+     * @customElement
+     * @polymer
+     */
     class Ausleihe extends Polymer.Element {
       static get is() { return 'ba-ausleihe'; }
       static get properties() {
           return {
+              /** Array with all books. */
               books: Array
           }
       }
 
+      /**
+       * Sets the url of the GET for all books at the first call.
+       */
       ready() {
         super.ready();
         this.shadowRoot.querySelector('#getBooks').url = HOST + "/books";
       }
 
+      /**
+       * Checks all checkboxes and sends for all selected boxes a lend request.
+       */
       ausleihen() {
           var checkboxes = this.shadowRoot.querySelectorAll('paper-checkbox');
           checkboxes.forEach((checkbox) => {
@@ -112,6 +125,11 @@
           });
       }
 
+      /**
+       * Returns a success message for the loan, updates the overview of all books and saves the statistic of the lent book.
+       * @param event response object
+       * @param request the sended request
+       */
       responseLend(event, request) {
           console.log(event);
           showToast(this, "Die Ausleihe wurde durchgeführt.", TOAST_TYPE.SUCCESS);
@@ -127,29 +145,52 @@
           this.$.statistic.generateRequest();
       }
 
+      /**
+       * Returns an error message, if the loan request failed.
+       * @param event response object
+       */
       errorLend(event) {
           console.log(event);
           showToast(this, "Die Ausleihe konnte nicht durchgeführt werden.", TOAST_TYPE.ERROR);
       }
 
+      /**
+       * Sends the GET request for all books.
+       */
       getBooks() {
         this.$.getBooks.generateRequest();
       }
 
+      /**
+       * Saves all books.
+       * @param event response object
+       */
       responseBooks(event) {
           this.books = JSON.parse(event.detail.response);
           console.log(this.books);
       }
 
+      /**
+       * Returns an error message, if the getBooks request failed.
+       * @param event response object
+       */
       errorBooks(event) {
           console.log(event);
           showToast(this, "Die Bücher konnten nicht geladen werden.", TOAST_TYPE.ERROR);
       }
 
+      /**
+       * Prints the reponse for the statistic request.
+       * @param event response object
+       */
       responseStatistic(event) {
           console.log(event);
       }
 
+      /**
+       * Returns an error message, if the statistic request failed.
+       * @param event response object
+       */
       errorStatistic(event) {
           console.log(event);
           showToast(this, "Die Ausleihe konnte nicht in der Statistik erfasst werden.", TOAST_TYPE.ERROR);

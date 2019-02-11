@@ -56,19 +56,32 @@
   </template>
 
   <script>
+    /**
+     * Overview of all lended books.
+     * The user can return the lended books.
+     * @customElement
+     * @polymer
+     */
     class Rueckgabe extends Polymer.Element {
       static get is() { return 'ba-rueckgabe'; }
       static get properties() {
         return {
+          /** Array with all lent books. */
           books: Array
         }
       }
 
+      /**
+       * Sets the url of the GET for all loans at the first call.
+       */
       ready() {
         super.ready();
         this.shadowRoot.querySelector('#getLoans').url = HOST + "/lend";
       }
 
+      /**
+       * Checks all checkboxes and ends the loan for all selected books.
+       */
       zurueckgeben() {
           console.log("Zurückgeben");
           var checkboxes = this.shadowRoot.querySelectorAll('paper-checkbox');
@@ -81,26 +94,45 @@
           });
       }
 
+      /**
+       * Sends the GET request for all loans.
+       */
       getLoans() {
         this.$.getLoans.generateRequest();
       }
 
+      /**
+       * Saves all loans.
+       * @param event response object
+       */
       responseLoans(event) {
           this.books = JSON.parse(event.detail.response);
           console.log(event);
       }
 
+      /**
+       * Returns an error message, if the getLoans request failed.
+       * @param event response object
+       */
       errorLoans(event) {
           console.log(event);
           showToast(this, "Die ausgeliehenen Bücher konnten nicht geladen werden.", TOAST_TYPE.ERROR);
       }
 
+      /**
+       * Returns a success message for the return and updates overview of all lended books.
+       * @param event response object
+       */
       responseReturn(event) {
         console.log(event);
         showToast(this, "Die Rückgabe wurde durchgeführt.", TOAST_TYPE.SUCCESS);
         this.getLoans();
       }
 
+      /**
+       * Returns an error message, if the return request failed.
+       * @param event response object
+       */
       errorReturn(event) {
         console.log(event);
         showToast(this, "Die Rückgabe konnte nicht durchgeführt werden.", TOAST_TYPE.ERROR);

@@ -1,6 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 
-<dom-module id="my-view404">
+<dom-module id="ba-view404">
   <template>
     <style>
       :host {
@@ -14,8 +14,13 @@
   </template>
 
   <script>
-    class MyView404 extends Polymer.Element {
-      static get is() { return 'my-view404'; }
+    /**
+     * Fallback site.
+     * @customElement
+     * @polymer
+     */
+    class BaView404 extends Polymer.Element {
+      static get is() { return 'ba-view404'; }
       static get properties() {
         return {
           // This shouldn't be neccessary, but the Analyzer isn't picking up
@@ -25,6 +30,6 @@
       }
     }
 
-    window.customElements.define(MyView404.is, MyView404);
+    window.customElements.define(BaView404.is, BaView404);
   </script>
 </dom-module>

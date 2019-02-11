@@ -99,18 +99,32 @@
     <!-- Built with love using Polymer Starter Kit -->
   </body>
 <script>
+  /**
+   * Calls the showToast method with type and message.
+   * @param element the polymer element
+   * @param message the toast message
+   * @param type the type of the toast
+   */
   function showToast(element, message, type) {
       let app = document.querySelector('ba-app');
       app.showToast(element, message, type);
   }
 
-    const TOAST_TYPE = {
-        SUCCESS: "success",
-        ERROR: "error"
-    }
+  /**
+   * Type of the toast.
+   * @type {{SUCCESS: string, ERROR: string}}
+   */
+  const TOAST_TYPE = {
+      SUCCESS: "success",
+      ERROR: "error"
+  }
 
-    const HOST = "";
-    //const HOST = "http://localhost:8080";
-    //const HOST = "https://lexkqqs2lj.execute-api.eu-central-1.amazonaws.com/Prod";
+  /**
+   * The host name for the classic or serverless application.
+   * @type {string}
+   */
+  const HOST = "";
+  //const HOST = "http://localhost:8080";
+  //const HOST = "https://lexkqqs2lj.execute-api.eu-central-1.amazonaws.com/Prod";
 </script>
 </html>

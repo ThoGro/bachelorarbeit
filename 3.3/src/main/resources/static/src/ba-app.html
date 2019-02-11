@@ -134,6 +134,13 @@
     // preventable, allowing for better scrolling performance.
     Polymer.setPassiveTouchGestures(true);
 
+    /**
+     * Sets up the basic structure for the polymer application.
+     * Contains a header with title and information about the active user.
+     * Contains a left-aligned menu.
+     * @customElement
+     * @polymer
+     */
     class MyApp extends Polymer.Element {
       static get is() { return 'ba-app'; }
 
@@ -149,6 +156,10 @@
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
+          /**
+           * The active user.
+           * @type {{id: number, username: string, password: string, role: string }}
+           */
           user: Object
         };
       }
@@ -159,6 +170,9 @@
         ];
       }
 
+      /**
+       * Sets the url of the GET for the active user at the first call.
+       */
       ready() {
         super.ready();
         this.shadowRoot.querySelector('#getUser').url = HOST + "/user";
@@ -189,6 +203,12 @@
         this.page = 'view404';
       }
 
+      /**
+       * Shows the toast for the specified type with the specified message.
+       * @param element the polymer element
+       * @param message the message of the toast
+       * @param type the type of the toast
+       */
       showToast(element, message, type) {
           let toast = this.shadowRoot.querySelector(`#${type}`);
           if (toast) {
@@ -200,23 +220,40 @@
           }
       }
 
+      /**
+       * Calls the getBooks() method from the <ba-ausleihe> component.
+       */
       getBooks() {
           this.$.ausleihe.getBooks();
       }
 
+      /**
+       * Calls the getStatistics() method from the <ba-statistic> component.
+       */
       getStatistics() {
           this.$.statistic.getStatistics();
       }
 
+      /**
+       * Calls the getLoans() method from the <ba-rueckgabe> component.
+       */
       getLoans() {
           this.$.rueckgabe.getLoans();
       }
 
+      /**
+       * Sets the active user, if the getUser request succeeded.
+       * @param event response object
+       */
       responseUser(event) {
           console.log(event);
           this.user = JSON.parse(event.detail.response);
       }
 
+      /**
+       * Prints an error message, if the getUser request failed.
+       * @param event response object
+       */
       errorUser(event) {
           console.log(event);
       }
