@@ -11,13 +11,12 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -32,9 +31,8 @@ import java.util.Collection;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
+@SpringBootTest
 @RunWith(SpringRunner.class)
-@WebMvcTest(BookController.class)
-@WebAppConfiguration
 public class BookControllerTest {
 
     private static final Collection<Book> BOOKS = new ArrayList<>(Arrays.asList(
@@ -146,6 +144,11 @@ public class BookControllerTest {
 
     @Test
     public void testReturnBook() {
+
+    }
+
+    @Test
+    public void testGetLoans() {
 
     }
 

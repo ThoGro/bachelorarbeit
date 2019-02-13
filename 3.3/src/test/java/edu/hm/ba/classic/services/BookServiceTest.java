@@ -125,4 +125,9 @@ public class BookServiceTest {
 
     }
 
+    @Test
+    public void testGetLoans() {
+
+    }
+
 }

@@ -6,6 +6,7 @@ import edu.hm.ba.classic.persistence.StatisticRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Collection;
 
 /**
@@ -13,6 +14,7 @@ import java.util.Collection;
  * @author Thomas Großbeck
  */
 @Service
+@Transactional(rollbackOn = { Exception.class })
 public class StatisticServiceImpl implements StatisticService {
 
     /**

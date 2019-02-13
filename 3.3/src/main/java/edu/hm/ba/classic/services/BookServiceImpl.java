@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -21,6 +22,7 @@ import java.util.Optional;
  * @author Thomas Großbeck
  */
 @Service
+@Transactional(rollbackOn = { Exception.class })
 public class BookServiceImpl implements BookService {
 
     /**

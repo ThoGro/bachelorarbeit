@@ -9,11 +9,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 /**
  * Implementation of the UserService.
  * @author Thomas Großbeck
  */
 @Service
+@Transactional(rollbackOn = { Exception.class })
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     /**

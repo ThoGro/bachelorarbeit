@@ -11,12 +11,11 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -31,15 +30,14 @@ import java.util.Collection;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
+@SpringBootTest
 @RunWith(SpringRunner.class)
-@WebMvcTest(StatisticController.class)
-@WebAppConfiguration
 public class StatisticControllerTest {
 
     private static final Collection<Statistic> STATISTICS = new ArrayList<>(Arrays.asList(
             new Statistic(1, 23, Category.SCIENCE),
-            new Statistic(1, 12, Category.HISTORY),
-            new Statistic(1, 55, Category.FANTASY)
+            new Statistic(2, 12, Category.HISTORY),
+            new Statistic(3, 55, Category.FANTASY)
     ));
 
     private static final Statistic STATISTIC = new Statistic(1, 34, Category.SCIENCE);
@@ -72,7 +70,7 @@ public class StatisticControllerTest {
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/statistics");
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         assertEquals(200, result.getResponse().getStatus());
-        assertEquals("[{\"id\":1,\"count\":23,\"category\":\"SCIENCE\"},{\"id\":1,\"count\":12,\"category\":\"HISTORY\"},{\"id\":1,\"count\":55,\"category\":\"FANTASY\"}]",
+        assertEquals("[{\"id\":1,\"count\":23,\"category\":\"SCIENCE\"},{\"id\":2,\"count\":12,\"category\":\"HISTORY\"},{\"id\":3,\"count\":55,\"category\":\"FANTASY\"}]",
                 result.getResponse().getContentAsString());
     }
 
