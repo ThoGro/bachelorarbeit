@@ -7,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,7 +23,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
             return null;

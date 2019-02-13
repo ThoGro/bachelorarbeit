@@ -3,8 +3,6 @@ package edu.hm.ba.classic.services;
 import edu.hm.ba.classic.entities.User;
 import org.springframework.security.core.Authentication;
 
-import java.util.Collection;
-
 /**
  * This interface represents the functionalities of the user service.
  * @author Thomas Großbeck

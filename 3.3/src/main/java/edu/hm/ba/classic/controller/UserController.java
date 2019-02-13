@@ -4,11 +4,8 @@ import edu.hm.ba.classic.entities.User;
 import edu.hm.ba.classic.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
 
 /**
  * The class provides endpoints for the communication with the user service.

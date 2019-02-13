@@ -14,8 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ClassicApplication extends WebSecurityConfigurerAdapter {
 
-	private static int userId;
-
 	public static void main(String[] args) {
 		SpringApplication.run(ClassicApplication.class, args);
 	}
@@ -28,10 +26,6 @@ public class ClassicApplication extends WebSecurityConfigurerAdapter {
 				.anyRequest().authenticated()
 				.and().httpBasic()
 				.and().csrf().disable();
-	}
-
-	public static void setUserId(int userId) {
-		userId = userId;
 	}
 
 }
