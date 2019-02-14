@@ -3,7 +3,6 @@ package edu.hm.ba.classic.services;
 import edu.hm.ba.classic.entities.Category;
 import edu.hm.ba.classic.entities.Statistic;
 import edu.hm.ba.classic.persistence.StatisticRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -20,8 +19,11 @@ public class StatisticServiceImpl implements StatisticService {
     /**
      * Statistic Repository.
      */
-    @Autowired
-    StatisticRepository statisticRepository;
+    private StatisticRepository statisticRepository;
+
+    public StatisticServiceImpl(StatisticRepository statisticRepository) {
+        this.statisticRepository = statisticRepository;
+    }
 
     @Override
     public Statistic count(Category category) {

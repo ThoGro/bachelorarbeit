@@ -2,7 +2,6 @@ package edu.hm.ba.classic.services;
 
 import edu.hm.ba.classic.entities.User;
 import edu.hm.ba.classic.persistence.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,8 +21,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     /**
      * User Repository.
      */
-    @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) {

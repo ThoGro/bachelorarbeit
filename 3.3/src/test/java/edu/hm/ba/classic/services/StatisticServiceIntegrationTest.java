@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -22,6 +23,7 @@ public class StatisticServiceIntegrationTest {
     public void testGetStatistics() {
         Collection<Statistic> statistics = statisticService.getStatistics();
         assertThat(statistics).isNotNull().isNotEmpty();
+        assertEquals(3, statistics.size());
     }
 
     @Test

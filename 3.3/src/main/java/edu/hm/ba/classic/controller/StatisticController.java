@@ -3,7 +3,7 @@ package edu.hm.ba.classic.controller;
 import edu.hm.ba.classic.entities.Category;
 import edu.hm.ba.classic.entities.Statistic;
 import edu.hm.ba.classic.services.StatisticService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.stat.Statistics;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +18,11 @@ import java.util.Collection;
 @CrossOrigin
 public class StatisticController {
 
-    @Autowired
-    StatisticService statisticService;
+    private StatisticService statisticService;
+
+    public StatisticController(StatisticService statisticService) {
+        this.statisticService = statisticService;
+    }
 
     /**
      * Increments the counter for the statistic with the specified category.

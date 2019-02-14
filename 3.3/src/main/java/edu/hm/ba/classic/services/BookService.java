@@ -61,6 +61,6 @@ public interface BookService {
      * @param authentication authentication object containing the active user
      * @return collection with all lent books
      */
-    Collection<Book> getLoans(Authentication authentication);
+    Collection<Book> getLendings(Authentication authentication);
 
 }

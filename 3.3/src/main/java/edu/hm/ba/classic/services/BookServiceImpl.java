@@ -8,7 +8,6 @@ import edu.hm.ba.classic.exception.CouldNotLendBookException;
 import edu.hm.ba.classic.exception.DuplicateBookException;
 import edu.hm.ba.classic.persistence.BookRepository;
 import edu.hm.ba.classic.persistence.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -33,14 +32,17 @@ public class BookServiceImpl implements BookService {
     /**
      * Book Repository.
      */
-    @Autowired
-    BookRepository bookRepository;
+    private BookRepository bookRepository;
 
     /**
      * User Repository.
      */
-    @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    public BookServiceImpl(BookRepository bookRepository, UserRepository userRepository) {
+        this.bookRepository = bookRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public Collection<Book> getBooks() {
@@ -117,7 +119,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Collection<Book> getLoans(Authentication authentication) {
+    public Collection<Book> getLendings(Authentication authentication) {
         User lender = userRepository.findUserByUsername(authentication.getName());
         return lender.getLendings();
     }

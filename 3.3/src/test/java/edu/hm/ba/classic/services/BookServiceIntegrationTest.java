@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -23,6 +24,7 @@ public class BookServiceIntegrationTest {
     public void testGetBooks() {
         Collection<Book> books = bookService.getBooks();
         assertThat(books).isNotNull().isNotEmpty();
+        assertEquals(3, books.size());
     }
 
     @Test
@@ -54,7 +56,7 @@ public class BookServiceIntegrationTest {
     }
 
     @Test
-    public void testGetLoans() {
+    public void testGetLendings() {
 
     }
 

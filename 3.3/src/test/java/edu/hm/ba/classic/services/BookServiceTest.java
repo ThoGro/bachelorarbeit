@@ -126,7 +126,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void testGetLoans() {
+    public void testGetLendings() {
 
     }
 

@@ -86,7 +86,7 @@ public class BookControllerIntegrationTest {
     }
 
     @Test
-    public void testGetLoans() throws Exception {
+    public void testGetLendings() throws Exception {
 
     }
 

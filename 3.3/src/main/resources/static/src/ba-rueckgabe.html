@@ -15,11 +15,11 @@
 
     <iron-ajax
             auto
-            id="getLoans"
+            id="getLendings"
             method="get"
             handle-as="application/json"
-            on-response="responseLoans"
-            on-error="errorLoans">
+            on-response="responseLendings"
+            on-error="errorLendings">
     </iron-ajax>
 
     <iron-ajax
@@ -72,11 +72,11 @@
       }
 
       /**
-       * Sets the url of the GET for all loans at the first call.
+       * Sets the url of the GET for all lendings at the first call.
        */
       ready() {
         super.ready();
-        this.shadowRoot.querySelector('#getLoans').url = HOST + "/lend";
+        this.shadowRoot.querySelector('#getLendings').url = HOST + "/lend";
       }
 
       /**
@@ -95,26 +95,26 @@
       }
 
       /**
-       * Sends the GET request for all loans.
+       * Sends the GET request for all lendings.
        */
-      getLoans() {
-        this.$.getLoans.generateRequest();
+      getLendings() {
+        this.$.getLendings.generateRequest();
       }
 
       /**
-       * Saves all loans.
+       * Saves all lendings.
        * @param event response object
        */
-      responseLoans(event) {
+      responseLendings(event) {
           this.books = JSON.parse(event.detail.response);
           console.log(event);
       }
 
       /**
-       * Returns an error message, if the getLoans request failed.
+       * Returns an error message, if the getLendings request failed.
        * @param event response object
        */
-      errorLoans(event) {
+      errorLendings(event) {
           console.log(event);
           showToast(this, "Die ausgeliehenen Bücher konnten nicht geladen werden.", TOAST_TYPE.ERROR);
       }
@@ -126,7 +126,7 @@
       responseReturn(event) {
         console.log(event);
         showToast(this, "Die Rückgabe wurde durchgeführt.", TOAST_TYPE.SUCCESS);
-        this.getLoans();
+        this.getLendings();
       }
 
       /**

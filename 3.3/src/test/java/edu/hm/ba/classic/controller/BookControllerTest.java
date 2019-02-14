@@ -148,7 +148,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void testGetLoans() {
+    public void testGetLendings() {
 
     }
 

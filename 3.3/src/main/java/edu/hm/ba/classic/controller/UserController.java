@@ -2,7 +2,6 @@ package edu.hm.ba.classic.controller;
 
 import edu.hm.ba.classic.entities.User;
 import edu.hm.ba.classic.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 public class UserController {
 
-    @Autowired
-    UserService userService;
+    private UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Returns the active user.

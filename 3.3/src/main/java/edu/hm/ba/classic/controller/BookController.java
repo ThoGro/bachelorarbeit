@@ -3,7 +3,6 @@ package edu.hm.ba.classic.controller;
 import edu.hm.ba.classic.entities.Book;
 import edu.hm.ba.classic.entities.User;
 import edu.hm.ba.classic.services.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -19,8 +18,11 @@ import java.util.Collection;
 @CrossOrigin
 public class BookController {
 
-    @Autowired
-    BookService bookService;
+    private BookService bookService;
+
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
     /**
      * Lists all books.
@@ -92,8 +94,8 @@ public class BookController {
      * @return response with the status and a collection with the lent books
      */
     @GetMapping(path = "/lend")
-    public ResponseEntity<Collection<Book>> getLoans(Authentication authentication) {
-        return ResponseEntity.ok(bookService.getLoans(authentication));
+    public ResponseEntity<Collection<Book>> getLendings(Authentication authentication) {
+        return ResponseEntity.ok(bookService.getLendings(authentication));
     }
 
 }
