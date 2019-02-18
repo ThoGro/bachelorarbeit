@@ -3,7 +3,6 @@ package edu.hm.ba.classic.controller;
 import edu.hm.ba.classic.entities.Category;
 import edu.hm.ba.classic.entities.Statistic;
 import edu.hm.ba.classic.services.StatisticService;
-import org.hibernate.stat.Statistics;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +28,7 @@ public class StatisticController {
      * @param category the category of the statistic to increment
      * @return response with the status and the incremented statistic
      */
-    @PostMapping(path = "/statistics/{category}")
+    @PutMapping(path = "/statistics/{category}")
     public ResponseEntity<Statistic> count(@PathVariable String category) {
         return ResponseEntity.ok(statisticService.count(Category.valueOf(category)));
     }

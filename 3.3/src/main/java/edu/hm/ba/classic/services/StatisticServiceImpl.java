@@ -28,8 +28,8 @@ public class StatisticServiceImpl implements StatisticService {
     @Override
     public Statistic count(Category category) {
         Statistic statistic = statisticRepository.getStatisticByCategory(category);
-        int newCount = statistic.getCount() + 1;
-        statistic.setCount(newCount);
+        int newCount = statistic.getStatisticCount() + 1;
+        statistic.setStatisticCount(newCount);
         return statisticRepository.save(statistic);
     }
 

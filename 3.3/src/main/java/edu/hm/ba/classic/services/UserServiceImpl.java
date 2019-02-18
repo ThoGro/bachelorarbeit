@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 /**
- * Implementation of the UserService.
+ * Implementation of the UserService and the UserDetailsService
  * @author Thomas Großbeck
  */
 @Service

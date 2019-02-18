@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 /**
- * Main class for the classic application.
+ * Main class for the classic application with HttpSecurity configuration.
  * @author Thomas Großbeck
  */
 @SpringBootApplication

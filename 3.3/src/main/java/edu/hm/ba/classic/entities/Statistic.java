@@ -26,7 +26,7 @@ public class Statistic {
      * The count of the statistic. Is incremented for each lend with the category.
      */
     @NotNull
-    private int count;
+    private int statisticCount;
 
     /**
      * Category for which the statistic is
@@ -46,9 +46,9 @@ public class Statistic {
      * @param count the count of the statistic
      * @param category the category of the statistic
      */
-    public Statistic(int id, int count, Category category) {
+    public Statistic(int id, int statisticCount, Category category) {
         this.id = id;
-        this.count = count;
+        this.statisticCount = statisticCount;
         this.category = category;
     }
 
