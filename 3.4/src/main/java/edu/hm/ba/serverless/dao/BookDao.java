@@ -2,6 +2,7 @@ package edu.hm.ba.serverless.dao;
 
 import edu.hm.ba.serverless.exception.*;
 import edu.hm.ba.serverless.model.Book;
+import edu.hm.ba.serverless.model.Category;
 import edu.hm.ba.serverless.model.request.CreateBookRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.*;
@@ -12,7 +13,8 @@ import java.util.stream.Collectors;
 public class BookDao {
 
     private static final String BOOK_ID = "isbn";
-    private static final String UPDATE_EXPRESSION = "SET title = :t, author = :a";
+    private static final String UPDATE_EXPRESSION = "SET title = :t, author = :a, category = :c";
+    private static final int ISBN_LENGTH = 13;
 
     private final String tableName;
     private final DynamoDbClient dynamoDb;
@@ -54,8 +56,14 @@ public class BookDao {
     }
 
     public Book createBook(final CreateBookRequest createBookRequest) {
-        if (createBookRequest == null) {
-            throw new IllegalArgumentException("CreateBookRequest was null");
+        System.out.println(createBookRequest.getIsbn());
+        System.out.println(createBookRequest.getCategory());
+        System.out.println(createBookRequest.getAuthor());
+        System.out.println(createBookRequest.getTitle());
+        System.out.println(checkIsbn(createBookRequest.getIsbn()));
+        if (!checkIsbn(createBookRequest.getIsbn()) || createBookRequest.getTitle().isEmpty() || createBookRequest.getAuthor().isEmpty()) {
+            throw new CouldNotCreateBookException("Unable to add book with isbn " + createBookRequest.getIsbn() +
+                    " title " + createBookRequest.getTitle() + " and author " + createBookRequest.getAuthor());
         }
         int tries = 0;
         while (tries < 10) {
@@ -70,6 +78,7 @@ public class BookDao {
                         .isbn(item.get(BOOK_ID).s())
                         .title(item.get("title").s())
                         .author(item.get("author").s())
+                        .category(Category.valueOf(item.get("category").s()))
                         .build();
             } catch (ConditionalCheckFailedException e) {
                 tries++;
@@ -109,6 +118,7 @@ public class BookDao {
         Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
         expressionAttributeValues.put(":t", AttributeValue.builder().s(book.getTitle()).build());
         expressionAttributeValues.put(":a", AttributeValue.builder().s(book.getAuthor()).build());
+        expressionAttributeValues.put(":c", AttributeValue.builder().s(book.getCategory().toString()).build());
         final UpdateItemResponse result;
         try {
             result = dynamoDb.updateItem(UpdateItemRequest.builder()
@@ -151,6 +161,11 @@ public class BookDao {
         } catch (NullPointerException e) {
             throw new IllegalStateException("item did not have an author attribute or it was not a String");
         }
+        try {
+            builder.category(Category.valueOf(item.get("category").s()));
+        } catch (NullPointerException e) {
+            throw new IllegalStateException("item did not have a category attribute or it was not a String");
+        }
         return builder.build();
     }
 
@@ -171,7 +186,47 @@ public class BookDao {
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("author was null");
         }
+        try {
+            item.put("category", AttributeValue.builder().s(book.getCategory().toString()).build());
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("category was null");
+        }
         return item;
+    }
+
+    /**
+     * Checks if there is a valid isbn number.
+     * @param isbn isbn to check
+     * @return true if the isbn is valid
+     */
+    private boolean checkIsbn(String isbn) {
+        if (isbn.isEmpty()) {
+            return false;
+        } else {
+            isbn = isbn.replace("-", ""); //mögliche Trennzeichen entfernen
+        }
+        if (isbn.length() != ISBN_LENGTH) {
+            return false;
+        }
+        ArrayList<Integer> ints = convertToList(isbn);
+        int checksum = (ints.get(0) + ints.get(2) + ints.get(4) + ints.get(6) + ints.get(8) + ints.get(10) + ints.get(12) + 3 * (ints.get(1) + ints.get(3) + ints.get(5) + ints.get(7) + ints.get(9) + ints.get(11))) % 10;
+        if (checksum == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Converts a String of numbers to a list of integers.
+     * @param isbn String to convert
+     * @return list of integers
+     */
+    private ArrayList<Integer> convertToList(String isbn) {
+        ArrayList<Integer> result = new ArrayList<>();
+        for (char c: isbn.toCharArray()) {
+            result.add(Character.getNumericValue(c));
+        }
+        return result;
     }
 
 }

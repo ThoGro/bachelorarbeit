@@ -8,6 +8,7 @@ import edu.hm.ba.serverless.config.AppComponent;
 import edu.hm.ba.serverless.config.DaggerAppComponent;
 import edu.hm.ba.serverless.dao.BookDao;
 import edu.hm.ba.serverless.model.Book;
+import edu.hm.ba.serverless.model.Category;
 import edu.hm.ba.serverless.model.response.GatewayResponse;
 
 import javax.inject.Inject;
@@ -37,7 +38,7 @@ public class UpdateBookHandler implements RequestHandler<Map<String, Object>, Ga
         try {
             Map<String, Object> bodyMap = objectMapper.readValue(body, new TypeReference<Map<String, String>>(){});
             Book toUpdate = new Book(
-                    bodyMap.get("isbn").toString(), bodyMap.get("title").toString(), bodyMap.get("author").toString());
+                    bodyMap.get("isbn").toString(), bodyMap.get("title").toString(), bodyMap.get("author").toString(), Category.valueOf(bodyMap.get("category").toString()));
             Book updated = bookDao.updateBook(isbn, toUpdate);
             return new GatewayResponse(objectMapper.writeValueAsString(updated), HEADER, SC_CREATED);
         } catch (IOException e) {
