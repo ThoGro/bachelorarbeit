@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class BookDao {
 
     private static final String BOOK_ID = "isbn";
-    private static final String UPDATE_EXPRESSION = "SET title = :t, author = :a, category = :c";
+    private static final String UPDATE_EXPRESSION = "SET title = :t, author = :a, category = :c, lender = :l";
     private static final int ISBN_LENGTH = 13;
 
     private final String tableName;
@@ -74,6 +74,7 @@ public class BookDao {
                         .title(item.get("title").s())
                         .author(item.get("author").s())
                         .category(Category.valueOf(item.get("category").s()))
+                        .lender(item.get("lender").s())
                         .build();
             } catch (ConditionalCheckFailedException e) {
                 tries++;
@@ -114,6 +115,7 @@ public class BookDao {
         expressionAttributeValues.put(":t", AttributeValue.builder().s(book.getTitle()).build());
         expressionAttributeValues.put(":a", AttributeValue.builder().s(book.getAuthor()).build());
         expressionAttributeValues.put(":c", AttributeValue.builder().s(book.getCategory().toString()).build());
+        expressionAttributeValues.put(":l", AttributeValue.builder().s(book.getLender()).build());
         final UpdateItemResponse result;
         try {
             result = dynamoDb.updateItem(UpdateItemRequest.builder()
@@ -135,12 +137,41 @@ public class BookDao {
         return convert(result.attributes());
     }
 
-    public void lendBook(String isbn) {
-        if (getBook(isbn) != null) {
-
+    public String lendBook(String isbn) {
+        Book toLend = getBook(isbn);
+        if (toLend != null) {
+            String lender = "TestUser";
+            toLend.setLender(lender);
+            updateBook(isbn, toLend);
+            return lender;
         } else {
             throw new CouldNotLendBookException("Book " + isbn + " could not be lent.");
         }
+    }
+
+    public String returnBook(String isbn) {
+        Book toReturn = getBook(isbn);
+        if (toReturn != null) {
+            //check if lender is active User
+            String returner = toReturn.getLender();
+            toReturn.setLender("null");
+            updateBook(isbn, toReturn);
+            return returner;
+        } else {
+            throw new CouldNotLendBookException("Book " + isbn + " could not be returned.");
+        }
+    }
+
+    public List<Book> getLendings() {
+        List<Book> books = getBooks();
+        List<Book> lendings = new ArrayList<>();
+        for (Book book : books) {
+            //prüfen, ob aktiver User der Ausleiher ist
+            if (book.getLender().equals("TestUser")) {
+                lendings.add(book);
+            }
+        }
+        return lendings;
     }
 
     private Book convert(final Map<String, AttributeValue> item) {
@@ -169,6 +200,12 @@ public class BookDao {
         } catch (NullPointerException e) {
             throw new IllegalStateException("item did not have a category attribute or it was not a String");
         }
+        try {
+            builder.lender(item.get("lender").s());
+        } catch (NullPointerException e) {
+            builder.lender(""); //Buch ist noch verfügbar
+            //throw new IllegalStateException("item did not have a lender attribute or it was not a String");
+        }
         return builder.build();
     }
 
@@ -193,6 +230,11 @@ public class BookDao {
             item.put("category", AttributeValue.builder().s(book.getCategory().toString()).build());
         } catch (NullPointerException e) {
             throw new IllegalArgumentException("category was null");
+        }
+        try {
+            item.put("lender", AttributeValue.builder().s(book.getLender()).build());
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("lender was null");
         }
         return item;
     }

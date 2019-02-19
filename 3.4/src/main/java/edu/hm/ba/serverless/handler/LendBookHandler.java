@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hm.ba.serverless.config.AppComponent;
 import edu.hm.ba.serverless.config.DaggerAppComponent;
 import edu.hm.ba.serverless.dao.BookDao;
+import edu.hm.ba.serverless.exception.CouldNotLendBookException;
 import edu.hm.ba.serverless.model.response.GatewayResponse;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.Map;
 
 public class LendBookHandler implements RequestHandler<Map<String, Object>, GatewayResponse>, ConstantRequestHandler {
@@ -35,7 +37,11 @@ public class LendBookHandler implements RequestHandler<Map<String, Object>, Gate
         System.out.println("2: " + context.getIdentity().toString());
         System.out.println("3: " + context.getIdentity().getIdentityId());
         System.out.println("4: " + context.getIdentity().getIdentityPoolId());
-        bookDao.lendBook(isbn);
-        return new GatewayResponse(null, HEADER, SC_CREATED);
+        String lender = bookDao.lendBook(isbn);
+        try {
+            return new GatewayResponse(objectMapper.writeValueAsString(lender), HEADER, SC_CREATED);
+        } catch (CouldNotLendBookException | IOException e) {
+            return new GatewayResponse(e.getMessage(), HEADER, SC_INTERNAL_SERVER_ERROR);
+        }
     }
 }

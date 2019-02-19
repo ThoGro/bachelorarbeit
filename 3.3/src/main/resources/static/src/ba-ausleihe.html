@@ -60,10 +60,10 @@
           <template is="dom-repeat" items="{{books}}">
             <tr>
               <td>
-                <template is="dom-if" if="[[item.lender]]">
+                <template is="dom-if" if="[[!_checkLender(item.lender)]]">
                   <paper-checkbox id="[[item.isbn]]" disabled></paper-checkbox>
                 </template>
-                <template is="dom-if" if="[[!item.lender]]">
+                <template is="dom-if" if="[[_checkLender(item.lender)]]">
                   <paper-checkbox id="[[item.isbn]]"></paper-checkbox>
                 </template>
               </td>
@@ -72,10 +72,10 @@
               <td>[[item.author]]</td>
               <td>[[item.category]]</td>
               <td>
-                <template is="dom-if" if="[[item.lender]]">
+                <template is="dom-if" if="[[!_checkLender(item.lender)]]">
                   <iron-icon icon="clear"></iron-icon>
                 </template>
-                <template is="dom-if" if="[[!item.lender]]">
+                <template is="dom-if" if="[[_checkLender(item.lender)]]">
                   <iron-icon icon="check"></iron-icon>
                 </template>
               </td>
@@ -109,6 +109,18 @@
       ready() {
         super.ready();
         this.shadowRoot.querySelector('#getBooks').url = HOST + "/books";
+      }
+
+      /**
+       * Returns true if the book is not lent. False if a lender exists.
+       * @param lender the name of the lender
+       */
+      _checkLender(lender) {
+        if (lender === "" || lender === "null") {
+          return true;
+        } else {
+          return false;
+        }
       }
 
       /**

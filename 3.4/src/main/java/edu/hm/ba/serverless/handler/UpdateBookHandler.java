@@ -38,7 +38,7 @@ public class UpdateBookHandler implements RequestHandler<Map<String, Object>, Ga
         try {
             Map<String, Object> bodyMap = objectMapper.readValue(body, new TypeReference<Map<String, String>>(){});
             Book toUpdate = new Book(
-                    bodyMap.get("isbn").toString(), bodyMap.get("title").toString(), bodyMap.get("author").toString(), Category.valueOf(bodyMap.get("category").toString()));
+                    bodyMap.get("isbn").toString(), bodyMap.get("title").toString(), bodyMap.get("author").toString(), Category.valueOf(bodyMap.get("category").toString()), "null");
             Book updated = bookDao.updateBook(isbn, toUpdate);
             return new GatewayResponse(objectMapper.writeValueAsString(updated), HEADER, SC_CREATED);
         } catch (IOException e) {

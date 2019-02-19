@@ -15,5 +15,6 @@ public class CreateBookRequest {
     private String title;
     private String author;
     private Category category;
+    private String lender;
 
 }

@@ -38,7 +38,7 @@ public class CreateBookHandler implements RequestHandler<Map<String, Object>, Ga
             String body = input.get("body").toString();
             Map<String, Object> bodyMap = objectMapper.readValue(body, new TypeReference<Map<String, String>>(){});
             CreateBookRequest  createBookRequest = new CreateBookRequest(
-                    bodyMap.get("isbn").toString(), bodyMap.get("title").toString(), bodyMap.get("author").toString(), Category.valueOf(bodyMap.get("category").toString()));
+                    bodyMap.get("isbn").toString(), bodyMap.get("title").toString(), bodyMap.get("author").toString(), Category.valueOf(bodyMap.get("category").toString()), "null");
             final Book book = bookDao.createBook(createBookRequest);
             return new GatewayResponse(objectMapper.writeValueAsString(book), HEADER, SC_CREATED);
         } catch (CouldNotCreateBookException | IOException e) {
