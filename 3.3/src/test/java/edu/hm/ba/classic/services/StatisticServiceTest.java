@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 public class StatisticServiceTest {
 
     private static final Statistic STATISTIC = new Statistic(1, 12, Category.SCIENCE);
+    private static final Statistic UPDATED_STATISTIC = new Statistic(1, 13, Category.SCIENCE);
 
     private static final List<Statistic> STATISTICS = new ArrayList<>(Arrays.asList(
             STATISTIC,
@@ -52,7 +53,10 @@ public class StatisticServiceTest {
 
     @Test
     public void testCount() {
-
+        when(statisticRepository.getStatisticByCategory(Category.SCIENCE)).thenReturn(STATISTIC);
+        when(statisticRepository.save(UPDATED_STATISTIC)).thenReturn(UPDATED_STATISTIC);
+        Statistic statistic = serviceUnderTest.count(Category.SCIENCE);
+        assertEquals(STATISTIC, statistic);
     }
 
 }

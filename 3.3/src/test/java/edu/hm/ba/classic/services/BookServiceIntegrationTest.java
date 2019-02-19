@@ -29,20 +29,24 @@ public class BookServiceIntegrationTest {
 
     @Test
     public void testAddBook() {
-        Book book = bookService.addBook(new Book("9783257069709", "Titel des Buches", "Autor", Category.valueOf("FANTASY")));
+        Book book = bookService.addBook(new Book("9783942656863", "Kalte Asche", "Simon Beckett", Category.FANTASY));
         assertThat(book).isNotNull();
+        assertEquals(book.getIsbn(), "9783942656863");
     }
 
     @Test
     public void testDeleteBook() {
-        Book book = bookService.deleteBook("9783866809876");
+        Book book = bookService.deleteBook("9783442151479");
         assertThat(book).isNotNull();
+        assertEquals(book.getIsbn(), "9783442151479");
     }
 
     @Test
     public void testUpdateBook() {
-        Book book = bookService.updateBook("9783866801234", new Book("9783866801234", "Neuer Titel", "Autor", Category.valueOf("SCIENCE")));
+        Book book = bookService.updateBook("9783806234770", new Book("9783806234770", "Neuer Titel", "Autor", Category.valueOf("SCIENCE")));
         assertThat(book).isNotNull();
+        assertEquals(book.getIsbn(), "9783806234770");
+        assertEquals(book.getTitle(), "Neuer Titel");
     }
 
     @Test

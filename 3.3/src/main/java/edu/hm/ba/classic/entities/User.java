@@ -58,15 +58,17 @@ public class User {
     public User() {}
 
     /**
-     * Constructs a user with id, username and password.
+     * Constructs a user with id, username, password and role.
      * @param id the id of the user
      * @param username the username of the user
      * @param password the password of the user
+     * @param role the role of the user
      */
-    public User(int id, String username, String password) {
+    public User(int id, String username, String password, Role role) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
 }

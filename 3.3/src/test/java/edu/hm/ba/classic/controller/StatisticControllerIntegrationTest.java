@@ -37,7 +37,7 @@ public class StatisticControllerIntegrationTest {
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/statistics");
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         assertEquals(200, result.getResponse().getStatus());
-        assertEquals("[{\"id\":1,\"count\":0,\"category\":\"HISTORY\"},{\"id\":2,\"count\":0,\"category\":\"SCIENCE\"},{\"id\":3,\"count\":0,\"category\":\"FANTASY\"}]",
+        assertEquals("[{\"id\":1,\"statisticCount\":0,\"category\":\"HISTORY\"},{\"id\":2,\"statisticCount\":1,\"category\":\"SCIENCE\"},{\"id\":3,\"statisticCount\":0,\"category\":\"FANTASY\"}]",
                 result.getResponse().getContentAsString());
     }
 
@@ -47,12 +47,15 @@ public class StatisticControllerIntegrationTest {
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/statistics/SCIENCE");
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
         assertEquals(200, result.getResponse().getStatus());
-        assertEquals("{\"id\":2,\"count\":0,\"category\":\"SCIENCE\"}", result.getResponse().getContentAsString());
+        assertEquals("{\"id\":2,\"statisticCount\":1,\"category\":\"SCIENCE\"}", result.getResponse().getContentAsString());
     }
 
     @Test
     public void testCount() throws Exception {
-
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/statistics/SCIENCE");
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        assertEquals(200, result.getResponse().getStatus());
+        assertEquals("{\"id\":2,\"statisticCount\":1,\"category\":\"SCIENCE\"}", result.getResponse().getContentAsString());
     }
 
 

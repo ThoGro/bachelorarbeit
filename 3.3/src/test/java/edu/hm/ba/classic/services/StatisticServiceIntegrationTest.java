@@ -1,5 +1,6 @@
 package edu.hm.ba.classic.services;
 
+import edu.hm.ba.classic.entities.Category;
 import edu.hm.ba.classic.entities.Statistic;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,11 +31,14 @@ public class StatisticServiceIntegrationTest {
     public void testGetStatistic() {
         Statistic statistic = statisticService.getStatistic("SCIENCE");
         assertThat(statistic).isNotNull();
+        assertEquals(Category.SCIENCE, statistic.getCategory());
     }
 
     @Test
     public void testCount() {
-
+        Statistic statistic = statisticService.count(Category.SCIENCE);
+        assertThat(statistic).isNotNull();
+        assertThat(statistic.getStatisticCount()).isGreaterThanOrEqualTo(1);
     }
 
 }
