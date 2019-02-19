@@ -56,11 +56,6 @@ public class BookDao {
     }
 
     public Book createBook(final CreateBookRequest createBookRequest) {
-        System.out.println(createBookRequest.getIsbn());
-        System.out.println(createBookRequest.getCategory());
-        System.out.println(createBookRequest.getAuthor());
-        System.out.println(createBookRequest.getTitle());
-        System.out.println(checkIsbn(createBookRequest.getIsbn()));
         if (!checkIsbn(createBookRequest.getIsbn()) || createBookRequest.getTitle().isEmpty() || createBookRequest.getAuthor().isEmpty()) {
             throw new CouldNotCreateBookException("Unable to add book with isbn " + createBookRequest.getIsbn() +
                     " title " + createBookRequest.getTitle() + " and author " + createBookRequest.getAuthor());
@@ -138,6 +133,14 @@ public class BookDao {
                     + " does not exist and was deleted after reading the book");
         }
         return convert(result.attributes());
+    }
+
+    public void lendBook(String isbn) {
+        if (getBook(isbn) != null) {
+
+        } else {
+            throw new CouldNotLendBookException("Book " + isbn + " could not be lent.");
+        }
     }
 
     private Book convert(final Map<String, AttributeValue> item) {

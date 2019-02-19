@@ -29,4 +29,12 @@ public interface AppComponent {
 
     void inject(GetStatisticHandler requestHandler);
 
+    void inject(LendBookHandler requestHandler);
+
+    void inject(ReturnBookHandler requestHandler);
+
+    void inject(GetLendingsHandler requestHandler);
+
+    void inject(CountStatisticHandler requestHandler);
+
 }

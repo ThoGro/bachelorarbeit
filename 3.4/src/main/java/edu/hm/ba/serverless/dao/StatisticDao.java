@@ -3,6 +3,7 @@ package edu.hm.ba.serverless.dao;
 import com.amazonaws.services.dynamodbv2.model.ResourceNotFoundException;
 import edu.hm.ba.serverless.exception.CouldNotCreateStatisticException;
 import edu.hm.ba.serverless.exception.TableDoesNotExistException;
+import edu.hm.ba.serverless.exception.UnableToUpdateException;
 import edu.hm.ba.serverless.model.Category;
 import edu.hm.ba.serverless.model.Statistic;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 public class StatisticDao {
 
     private static final String STATISTIC_ID = "category";
+    private static final String UPDATE_EXPRESSION = "SET statisticCount = :c";
 
     private final String tableName;
     private final DynamoDbClient dynamoDb;
@@ -69,7 +71,7 @@ public class StatisticDao {
                         .build());
                 return Statistic.builder()
                         .category(Category.valueOf(item.get(STATISTIC_ID).s()))
-                        .count(Integer.valueOf(item.get("count").s()))
+                        .statisticCount(Integer.valueOf(item.get("statisticCount").s()))
                         .build();
             } catch (ConditionalCheckFailedException e) {
                 tries++;
@@ -80,6 +82,32 @@ public class StatisticDao {
         throw new CouldNotCreateStatisticException("Unable to generate unique book id after 10 tries");
     }
 
+    public Statistic count(final Category category) {
+        Statistic toCount = getStatistic(category);
+        toCount.setStatisticCount(toCount.getStatisticCount() + 1);
+
+        Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
+        expressionAttributeValues.put(":c", AttributeValue.builder().s(Integer.toString(toCount.getStatisticCount())).build());
+        final UpdateItemResponse result;
+        try {
+            result = dynamoDb.updateItem(UpdateItemRequest.builder()
+                    .tableName(tableName)
+                    .key(Collections.singletonMap(STATISTIC_ID,
+                            AttributeValue.builder().s(toCount.getCategory().toString()).build()))
+                    .returnValues(ReturnValue.ALL_NEW)
+                    .updateExpression(UPDATE_EXPRESSION)
+                    .conditionExpression("attribute_exists(category)")
+                    .expressionAttributeValues(expressionAttributeValues)
+                    .build());
+        } catch (ConditionalCheckFailedException e) {
+            throw new UnableToUpdateException("the statistic does not exist");
+        } catch (ResourceNotFoundException e) {
+            throw new TableDoesNotExistException("Statistic table " + tableName
+                    + " does not exist and was deleted after reading the statistic");
+        }
+        return convert(result.attributes());
+    }
+
     private Map<String, AttributeValue> createStatisticItem(final Statistic statistic) {
         Map<String, AttributeValue> item = new HashMap<>();
         try {
@@ -88,9 +116,9 @@ public class StatisticDao {
             throw new IllegalArgumentException("category was null");
         }
         try {
-            item.put("count", AttributeValue.builder().s(Integer.toString(statistic.getCount())).build());
+            item.put("statisticCount", AttributeValue.builder().s(Integer.toString(statistic.getStatisticCount())).build());
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("count was null");
+            throw new IllegalArgumentException("statisticCount was null");
         }
         return item;
     }
@@ -106,9 +134,9 @@ public class StatisticDao {
             throw new IllegalStateException("item did not have a category attribute or it was not a enum");
         }
         try {
-            builder.count(Integer.valueOf(item.get("count").s()));
+            builder.statisticCount(Integer.valueOf(item.get("statisticCount").s()));
         } catch (NullPointerException e) {
-            throw new IllegalStateException("item did not have a count attribute or it was not a integer");
+            throw new IllegalStateException("item did not have a statisticCount attribute or it was not a integer");
         }
         return builder.build();
     }

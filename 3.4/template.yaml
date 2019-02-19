@@ -91,6 +91,42 @@ Resources:
                     Properties:
                         Path: /books/{isbn}
                         Method: put
+    GetLendingsFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: target/Serverless-1.0.jar
+            Handler: edu.hm.ba.serverless.handler.GetLendingsHandler::handleRequest
+            Runtime: java8
+            Events:
+                GetLendings:
+                    Type: Api
+                    Properties:
+                        Path: /lend
+                        Method: get
+    LendBookFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: target/Serverless-1.0.jar
+            Handler: edu.hm.ba.serverless.handler.LendBookHandler::handleRequest
+            Runtime: java8
+            Events:
+                LendBook:
+                    Type: Api
+                    Properties:
+                        Path: /lend/{isbn}
+                        Method: put
+    ReturnBookFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: target/Serverless-1.0.jar
+            Handler: edu.hm.ba.serverless.handler.ReturnBookHandler::handleRequest
+            Runtime: java8
+            Events:
+                ReturnBook:
+                    Type: Api
+                    Properties:
+                        Path: /return/{isbn}
+                        Method: put
     CreateStatisticFunction:
         Type: AWS::Serverless::Function
         Properties:
@@ -127,6 +163,18 @@ Resources:
                     Properties:
                         Path: /statistics
                         Method: get
+    CountStatisticFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: target/Serverless-1.0.jar
+            Handler: edu.hm.ba.serverless.handler.CountStatisticHandler::handleRequest
+            Runtime: java8
+            Events:
+                Count:
+                    Type: Api
+                    Properties:
+                        Path: /statistics/{category}
+                        Method: put
 
 Outputs:
 
@@ -162,6 +210,18 @@ Outputs:
         Description: "UpdateBook Lambda Function ARN"
         Value: !GetAtt UpdateBookFunction.Arn
 
+    GetLendingsFunction:
+        Description: "GetLendings Lambda Function ARN"
+        Value: !GetAtt GetLendingsFunction.Arn
+
+    LendBookFunction:
+        Description: "LendBook Lambda Function ARN"
+        Value: !GetAtt LendBookFunction.Arn
+
+    ReturnBookFunction:
+        Description: "ReturnBook Lambda Function ARN"
+        Value: !GetAtt ReturnBookFunction.Arn
+
     CreateStatisticFunction:
         Description: "CreateStatistic Lambda Function ARN"
         Value: !GetAtt CreateStatisticFunction.Arn
@@ -173,3 +233,7 @@ Outputs:
     GetStatisticFunction:
         Description: "GetStatisticFunction Lambda Function ARN"
         Value: !GetAtt GetStatisticFunction.Arn
+
+    CountStatisticFunction:
+        Description: "CountStatisticFunction Lambda Function ARN"
+        Value: !GetAtt CountStatisticFunction.Arn

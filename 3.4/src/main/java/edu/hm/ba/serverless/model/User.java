@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Statistic {
+public class User {
 
-    private int statisticCount;
-    private Category category;
+    private String username;
+    private String password;
 
 }
