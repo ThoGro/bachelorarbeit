@@ -33,7 +33,6 @@ public class CountStatisticHandler implements RequestHandler<Map<String, Object>
     public GatewayResponse handleRequest(Map<String, Object> input, Context context) {
         String pathParameter = input.get("pathParameters").toString();
         String category = pathParameter.substring(10, pathParameter.length()-1);
-        System.out.println(category);
         Statistic statistic = statisticDao.count(Category.valueOf(category));
         try {
             return new GatewayResponse(objectMapper.writeValueAsString(statistic), HEADER, SC_OK);
