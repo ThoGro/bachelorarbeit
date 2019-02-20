@@ -174,7 +174,7 @@
        * @param lender the name of the lender
        */
       _checkLender(lender) {
-        if (lender === "" || lender === "null") {
+        if (lender === "" || lender === "null" || lender === null) {
           return true;
         } else {
           return false;
