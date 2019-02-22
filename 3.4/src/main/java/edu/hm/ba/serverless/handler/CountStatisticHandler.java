@@ -14,16 +14,31 @@ import edu.hm.ba.serverless.model.response.GatewayResponse;
 import javax.inject.Inject;
 import java.util.Map;
 
+/**
+ * Handler for request to CountStatistic Lambda function.
+ */
 public class CountStatisticHandler implements RequestHandler<Map<String, Object>, GatewayResponse>, ConstantRequestHandler {
 
+    /**
+     * Object mapper for serialization.
+     */
     @Inject
     ObjectMapper objectMapper;
 
+    /**
+     * Data Access Object.
+     */
     @Inject
     StatisticDao statisticDao;
 
+    /**
+     * Dagger component for dependency injection.
+     */
     private final AppComponent appComponent;
 
+    /**
+     * Constructor to inject object mapper and dao.
+     */
     public CountStatisticHandler() {
         appComponent = DaggerAppComponent.builder().build();
         appComponent.inject(this);

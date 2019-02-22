@@ -14,16 +14,31 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Handler for request to GetStatistics Lambda function.
+ */
 public class GetStatisticsHandler implements RequestHandler<Map<String, Object>, GatewayResponse>, ConstantRequestHandler {
 
+    /**
+     * Object mapper for serialization.
+     */
     @Inject
     ObjectMapper objectMapper;
 
+    /**
+     * Data Access Object.
+     */
     @Inject
     StatisticDao statisticDao;
 
+    /**
+     * Dagger component for dependency injection.
+     */
     private final AppComponent appComponent;
 
+    /**
+     * Constructor to inject object mapper and dao.
+     */
     public GetStatisticsHandler() {
         appComponent = DaggerAppComponent.builder().build();
         appComponent.inject(this);

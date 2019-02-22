@@ -12,19 +12,46 @@ import software.amazon.awssdk.services.dynamodb.model.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Represents all functionalities with database access to the statistic table.
+ */
 public class StatisticDao {
 
+    /**
+     * Name of the key in the statistic table.
+     */
     private static final String STATISTIC_ID = "category";
+
+    /**
+     * Update expressions for updating a statistic.
+     */
     private static final String UPDATE_EXPRESSION = "SET statisticCount = :c";
 
+    /**
+     * Table name for the database access.
+     */
     private final String tableName;
+
+    /**
+     * Database client to manage the access.
+     */
     private final DynamoDbClient dynamoDb;
 
+    /**
+     * Constructs a StatisticDao with database client and table name.
+     * @param dynamoDb the DynamoDbClient
+     * @param tableName the table name
+     */
     public StatisticDao (final DynamoDbClient dynamoDb, final String tableName) {
         this.dynamoDb = dynamoDb;
         this.tableName = tableName;
     }
 
+    /**
+     * Returns the statistic for the specified category.
+     * @param category the category for which the statistic will be returned
+     * @return the statistic for the specified category
+     */
     public Statistic getStatistic(final Category category) {
         try {
             return Optional.ofNullable(
@@ -41,6 +68,10 @@ public class StatisticDao {
         }
     }
 
+    /**
+     * Returns all statistics.
+     * @return list with all statistics
+     */
     public List<Statistic> getStatistics() {
         final ScanResponse result;
         try {
@@ -56,6 +87,11 @@ public class StatisticDao {
         return statistics;
     }
 
+    /**
+     * Creates a statistic in the table.
+     * @param statistic the statistic to create
+     * @return the created statistic
+     */
     public Statistic createStatistic(final Statistic statistic) {
         if (statistic == null) {
             throw new IllegalArgumentException("Statistic was null.");
@@ -82,6 +118,11 @@ public class StatisticDao {
         throw new CouldNotCreateStatisticException("Unable to generate unique book id after 10 tries");
     }
 
+    /**
+     * Increments the statistic counter for the specified category.
+     * @param category the category for which the counter is incremented
+     * @return the incremented statistic
+     */
     public Statistic count(final Category category) {
         Statistic toCount = getStatistic(category);
         toCount.setStatisticCount(toCount.getStatisticCount() + 1);
@@ -108,6 +149,11 @@ public class StatisticDao {
         return convert(result.attributes());
     }
 
+    /**
+     * Creates a item for insertion to the table.
+     * @param statistic the statistic with the information for the item
+     * @return the item for insertion
+     */
     private Map<String, AttributeValue> createStatisticItem(final Statistic statistic) {
         Map<String, AttributeValue> item = new HashMap<>();
         try {
@@ -123,6 +169,11 @@ public class StatisticDao {
         return item;
     }
 
+    /**
+     * Converts a database response to a statistic object.
+     * @param item map as structure of a GetItemResponse from the DynamoDB
+     * @return the equivalent statistic object
+     */
     private Statistic convert(final Map<String, AttributeValue> item) {
         if (item == null || item.isEmpty()) {
             return null;

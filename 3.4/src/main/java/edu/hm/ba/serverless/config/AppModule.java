@@ -6,12 +6,16 @@ import dagger.Provides;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
-import javax.inject.Singleton;
-
+/**
+ * Module to provide dependencies for injection.
+ */
 @Module
 public class AppModule {
 
-    @Singleton
+    /**
+     * Provides a DynamoDbClient.
+     * @return the DynamoDbClient
+     */
     @Provides
     DynamoDbClient dynamoDb() {
         DynamoDbClient client = DynamoDbClient.builder()
@@ -20,7 +24,10 @@ public class AppModule {
         return client;
     }
 
-    @Singleton
+    /**
+     * Provides an object mapper.
+     * @return the object mapper
+     */
     @Provides
     ObjectMapper objectMapper() {
         return new ObjectMapper();

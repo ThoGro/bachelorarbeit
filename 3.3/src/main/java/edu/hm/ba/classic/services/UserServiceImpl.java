@@ -23,6 +23,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      */
     private UserRepository userRepository;
 
+    /**
+     * Constructs a service instance with the user repositories.
+     * @param userRepository the user repository
+     */
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

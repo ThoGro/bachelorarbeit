@@ -3,6 +3,10 @@ package edu.hm.ba.serverless.handler;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This interface represents some constants for the response of the functions.
+ * Contains status codes and headers.
+ */
 public interface ConstantRequestHandler {
 
     int SC_OK = 200;

@@ -21,6 +21,10 @@ public class StatisticServiceImpl implements StatisticService {
      */
     private StatisticRepository statisticRepository;
 
+    /**
+     * Constructs a service instance with the statistic repositories.
+     * @param statisticRepository the statistic repository
+     */
     public StatisticServiceImpl(StatisticRepository statisticRepository) {
         this.statisticRepository = statisticRepository;
     }

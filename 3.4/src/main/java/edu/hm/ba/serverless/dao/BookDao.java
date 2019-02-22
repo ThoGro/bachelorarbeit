@@ -10,20 +10,51 @@ import software.amazon.awssdk.services.dynamodb.model.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Represents all functionalities with database access to the book table.
+ */
 public class BookDao {
 
+    /**
+     * Name of the key in the book table.
+     */
     private static final String BOOK_ID = "isbn";
+
+    /**
+     * Update expressions for updating a book.
+     */
     private static final String UPDATE_EXPRESSION = "SET title = :t, author = :a, category = :c, lender = :l";
+
+    /**
+     * Length of an isbn code
+     */
     private static final int ISBN_LENGTH = 13;
 
+    /**
+     * Table name for the database access.
+     */
     private final String tableName;
+
+    /**
+     * Database client to manage the access.
+     */
     private final DynamoDbClient dynamoDb;
 
+    /**
+     * Constructs a BookDao with database client and table name.
+     * @param dynamoDb the DynamoDbClient
+     * @param tableName the table name
+     */
     public BookDao (final DynamoDbClient dynamoDb, final String tableName) {
         this.dynamoDb = dynamoDb;
         this.tableName = tableName;
     }
 
+    /**
+     * Returns the book for the specified isbn.
+     * @param isbn the isbn for which the bock will be returned
+     * @return the book for the specified isbn
+     */
     public Book getBook(final String isbn) {
         try {
             return Optional.ofNullable(
@@ -40,6 +71,10 @@ public class BookDao {
         }
     }
 
+    /**
+     * Returns all books.
+     * @return list with all books
+     */
     public List<Book> getBooks() {
         final ScanResponse result;
         try {
@@ -55,6 +90,11 @@ public class BookDao {
         return books;
     }
 
+    /**
+     * Creates a book in the table.
+     * @param createBookRequest the book to create
+     * @return the created book
+     */
     public Book createBook(final CreateBookRequest createBookRequest) {
         if (!checkIsbn(createBookRequest.getIsbn()) || createBookRequest.getTitle().isEmpty() || createBookRequest.getAuthor().isEmpty()) {
             throw new CouldNotCreateBookException("Unable to add book with isbn " + createBookRequest.getIsbn() +
@@ -85,6 +125,11 @@ public class BookDao {
         throw new CouldNotCreateBookException("Unable to generate unique book id after 10 tries");
     }
 
+    /**
+     * Deletes a book from the table.
+     * @param isbn the isbn of the book to delete
+     * @return the deleted book
+     */
     public Book deleteBook(final String isbn) {
         try {
             return Optional.ofNullable(dynamoDb.deleteItem(DeleteItemRequest.builder()
@@ -106,6 +151,12 @@ public class BookDao {
         }
     }
 
+    /**
+     * Updates a book in the table.
+     * @param isbn the isbn of the book to update
+     * @param book the book object with the new book informations
+     * @return the updated book
+     */
     public Book updateBook(final String isbn, final Book book) {
         if (book.getTitle().isEmpty() || book.getAuthor().isEmpty() || book.getIsbn().isEmpty()) {
             throw new CouldNotUpdateBookException("Unable to update book with isbn " + isbn +
@@ -137,6 +188,11 @@ public class BookDao {
         return convert(result.attributes());
     }
 
+    /**
+     * Marks a book as lent. After this the lender of the book is set.
+     * @param isbn the isbn of the lent book
+     * @return the username of the lender
+     */
     public String lendBook(String isbn) {
         Book toLend = getBook(isbn);
         if (toLend != null) {
@@ -149,6 +205,11 @@ public class BookDao {
         }
     }
 
+    /**
+     * Unmarks a lent book. After this the book is available and the lender of the book is "null".
+     * @param isbn the isbn of the returned book
+     * @return the username of the returner
+     */
     public String returnBook(String isbn) {
         Book toReturn = getBook(isbn);
         if (toReturn != null) {
@@ -162,6 +223,10 @@ public class BookDao {
         }
     }
 
+    /**
+     * Returns all lent books for a specific user.
+     * @return list with all lent books
+     */
     public List<Book> getLendings() {
         List<Book> books = getBooks();
         List<Book> lendings = new ArrayList<>();
@@ -174,6 +239,11 @@ public class BookDao {
         return lendings;
     }
 
+    /**
+     * Converts a database response to a book object.
+     * @param item map as structure of a GetItemResponse from the DynamoDB
+     * @return the equivalent book object
+     */
     private Book convert(final Map<String, AttributeValue> item) {
         if (item == null || item.isEmpty()) {
             return null;
@@ -209,6 +279,11 @@ public class BookDao {
         return builder.build();
     }
 
+    /**
+     * Creates a item for insertion to the table.
+     * @param book the book with the information for the item
+     * @return the item for insertion
+     */
     private Map<String, AttributeValue> createBookItem(final CreateBookRequest book) {
         Map<String, AttributeValue> item = new HashMap<>();
         try {

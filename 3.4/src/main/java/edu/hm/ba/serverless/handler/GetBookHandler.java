@@ -13,16 +13,31 @@ import edu.hm.ba.serverless.config.DaggerAppComponent;
 import javax.inject.Inject;
 import java.util.Map;
 
+/**
+ * Handler for request to GetBook Lambda function.
+ */
 public class GetBookHandler implements RequestHandler<Map<String, Object>, GatewayResponse>, ConstantRequestHandler {
 
+    /**
+     * Object mapper for serialization.
+     */
     @Inject
     ObjectMapper objectMapper;
 
+    /**
+     * Data Access Object.
+     */
     @Inject
     BookDao bookDao;
 
+    /**
+     * Dagger component for dependency injection.
+     */
     private final AppComponent appComponent;
 
+    /**
+     * Constructor to inject object mapper and dao.
+     */
     public GetBookHandler() {
         appComponent = DaggerAppComponent.builder().build();
         appComponent.inject(this);

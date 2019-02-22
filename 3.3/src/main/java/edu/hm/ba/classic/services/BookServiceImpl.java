@@ -39,6 +39,11 @@ public class BookServiceImpl implements BookService {
      */
     private UserRepository userRepository;
 
+    /**
+     * Constructs a service instance with the two needed repositories.
+     * @param bookRepository the book repository
+     * @param userRepository the user repository
+     */
     public BookServiceImpl(BookRepository bookRepository, UserRepository userRepository) {
         this.bookRepository = bookRepository;
         this.userRepository = userRepository;

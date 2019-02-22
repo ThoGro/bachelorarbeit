@@ -5,6 +5,9 @@ import edu.hm.ba.serverless.handler.*;
 
 import javax.inject.Singleton;
 
+/**
+ * Component for the dependency injection with dagger.
+ */
 @Singleton
 @Component(modules = {
         AppModule.class,

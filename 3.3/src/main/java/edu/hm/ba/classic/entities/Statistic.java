@@ -29,7 +29,7 @@ public class Statistic {
     private int statisticCount;
 
     /**
-     * Category for which the statistic is
+     * Category for which the statistic is.
      */
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -43,7 +43,7 @@ public class Statistic {
     /**
      * Constructs a statistic with id, count and category.
      * @param id the id of the statistic
-     * @param count the count of the statistic
+     * @param statisticCount the count of the statistic
      * @param category the category of the statistic
      */
     public Statistic(int id, int statisticCount, Category category) {
