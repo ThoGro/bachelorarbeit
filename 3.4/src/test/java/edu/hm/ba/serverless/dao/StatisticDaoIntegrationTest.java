@@ -2,6 +2,7 @@ package edu.hm.ba.serverless.dao;
 
 import edu.hm.ba.serverless.model.Category;
 import edu.hm.ba.serverless.model.Statistic;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import software.amazon.awssdk.regions.Region;
@@ -20,12 +21,20 @@ public class StatisticDaoIntegrationTest {
 
     private StatisticDao statisticDao;
 
+    private Statistic statistic;
+
     @Before
     public void setUp() {
         DynamoDbClient dynamoDb = DynamoDbClient.builder()
                 .region(Region.EU_CENTRAL_1)
                 .build();
         statisticDao = new StatisticDao(dynamoDb, TABLE_NAME);
+        statistic = statisticDao.getStatistic(STATISTIC.getCategory());
+    }
+
+    @After
+    public void cleanUp() {
+        statisticDao.createStatistic(statistic);
     }
 
     @Test
