@@ -163,7 +163,7 @@ public class BookServiceTest {
         when(bookRepository.existsById(lent.getIsbn())).thenReturn(true);
         when(bookRepository.getOne(lent.getIsbn())).thenReturn(lent);
         when(userRepository.findUserByUsername(LENDER.getUsername())).thenReturn(LENDER);
-        User returner = serviceUnderTest.returnBook("9783764504458", authentication);
+        User returner = serviceUnderTest.returnBook(lent.getIsbn(), authentication);
         assertEquals(LENDER, returner);
     }
 

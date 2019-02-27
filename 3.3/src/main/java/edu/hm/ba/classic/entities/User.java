@@ -48,7 +48,7 @@ public class User {
     /**
      * List with all lent books from the user.
      */
-    @OneToMany(mappedBy = "lender")
+    @OneToMany(mappedBy = "lender", fetch = FetchType.EAGER)
     @JsonBackReference
     private List<Book> lendings;
 
