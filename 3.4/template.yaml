@@ -16,21 +16,6 @@ Globals:
 
 Resources:
 
-    HelloWorldFunction:
-        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-        Properties:
-            CodeUri: target/Serverless-1.0.jar
-            Handler: helloworld.App::handleRequest
-            Runtime: java8
-            Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
-                Variables:
-                    PARAM1: VALUE
-            Events:
-                HelloWorld:
-                    Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-                    Properties:
-                        Path: /hello
-                        Method: get
     GetBookFunction:
         Type: AWS::Serverless::Function
         Properties:
@@ -178,25 +163,17 @@ Resources:
 
 Outputs:
 
-    HelloWorldApi:
-      Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-
-    HelloWorldFunction:
-      Description: "Hello World Lambda Function ARN"
-      Value: !GetAtt HelloWorldFunction.Arn
-
-    HelloWorldFunctionIamRole:
-      Description: "Implicit IAM Role created for Hello World function"
-      Value: !GetAtt HelloWorldFunctionRole.Arn
-
-    GetBookFunction:
-      Description: "GetBook Lambda Function ARN"
-      Value: !GetAtt GetBookFunction.Arn
+    GetBooksApi:
+      Description: "API Gateway endpoint URL for Prod stage for GetBooks function"
+      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/books/"
 
     GetBooksFunction:
         Description: "GetBooks Lambda Function ARN"
         Value: !GetAtt GetBooksFunction.Arn
+
+    GetBookFunction:
+        Description: "GetBook Lambda Function ARN"
+        Value: !GetAtt GetBookFunction.Arn
 
     CreateBookFunction:
       Description: "CreateBook Lambda Function ARN"

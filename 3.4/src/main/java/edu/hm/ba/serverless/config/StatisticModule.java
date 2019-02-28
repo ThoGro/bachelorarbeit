@@ -20,7 +20,7 @@ public class StatisticModule {
      */
     @Provides
     @Named("statisticTableName")
-    String statisticTableName() {
+    public String statisticTableName() {
         return Optional.ofNullable(System.getenv("TABLE_NAME")).orElse("statistics");
     }
 

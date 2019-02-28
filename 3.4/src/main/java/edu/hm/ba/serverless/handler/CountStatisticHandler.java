@@ -1,7 +1,9 @@
 package edu.hm.ba.serverless.handler;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.DynamodbEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hm.ba.serverless.config.AppComponent;
@@ -17,7 +19,7 @@ import java.util.Map;
 /**
  * Handler for request to CountStatistic Lambda function.
  */
-public class CountStatisticHandler implements RequestHandler<Map<String, Object>, GatewayResponse>, ConstantRequestHandler {
+public class CountStatisticHandler implements RequestHandler<DynamodbEvent, GatewayResponse>, ConstantRequestHandler {
 
     /**
      * Object mapper for serialization.
@@ -45,14 +47,24 @@ public class CountStatisticHandler implements RequestHandler<Map<String, Object>
     }
 
     @Override
-    public GatewayResponse handleRequest(Map<String, Object> input, Context context) {
-        String pathParameter = input.get("pathParameters").toString();
-        String category = pathParameter.substring(10, pathParameter.length()-1);
-        Statistic statistic = statisticDao.count(Category.valueOf(category));
-        try {
-            return new GatewayResponse(objectMapper.writeValueAsString(statistic), HEADER, SC_OK);
-        } catch (JsonProcessingException e) {
-            return new GatewayResponse(e.getMessage(), HEADER, SC_INTERNAL_SERVER_ERROR);
+    public GatewayResponse handleRequest(DynamodbEvent input, Context context) {
+        for (DynamodbEvent.DynamodbStreamRecord record : input.getRecords()) {
+            Map<String, AttributeValue> newImage = record.getDynamodb().getNewImage();
+            Map<String, AttributeValue> oldImage = record.getDynamodb().getOldImage();
+            if (newImage != null && oldImage != null) {
+                String newLender = newImage.get("lender").getS();
+                String oldLender = oldImage.get("lender").getS();
+                if (!newLender.equals("null") && oldLender.equals("null")) {
+                    String category = newImage.get("category").getS();
+                    Statistic statistic = statisticDao.count(Category.valueOf(category));
+                    try {
+                        return new GatewayResponse(objectMapper.writeValueAsString(statistic), HEADER, SC_OK);
+                    } catch (JsonProcessingException e) {
+                        return new GatewayResponse(e.getMessage(), HEADER, SC_INTERNAL_SERVER_ERROR);
+                    }
+                }
+            }
         }
+        return new GatewayResponse(null, HEADER, SC_INTERNAL_SERVER_ERROR);
     }
 }

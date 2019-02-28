@@ -20,7 +20,7 @@ public class BookModule {
      */
     @Provides
     @Named("bookTableName")
-    String bookTableName() {
+    public String bookTableName() {
         return Optional.ofNullable(System.getenv("TABLE_NAME")).orElse("books");
     }
 

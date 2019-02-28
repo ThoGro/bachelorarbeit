@@ -153,8 +153,10 @@
               }
           });
           this.getBooks();
-          this.$.statistic.url = HOST + "/statistics/" + category;
-          this.$.statistic.generateRequest();
+          if (HOST === "" || HOST === "http://localhost:8080") {
+              this.$.statistic.url = HOST + "/statistics/" + category;
+              this.$.statistic.generateRequest();
+          }
       }
 
       /**
