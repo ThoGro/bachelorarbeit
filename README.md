@@ -12,7 +12,7 @@
 <br>2.3 Allgemeine Patterns für Serverless-Umsetzungen
 <br>&nbsp;&nbsp;2.3.1 Serverless Computing Manifest
 <br>&nbsp;&nbsp;2.3.2 Schnittstellen zu anderen Architekturen
-3. Entwicklung einer prototypischen Anwendung
+3. Vergleich zweier prototypischen Anwendung
 <br>3.1 Vorgehensweise beim Vergleich der beiden Anwendungen
 <br>3.2 Fachliche Beschreibung der Beispiel-Anwendung
 <br>3.3 Implementierung der Benutzeroberfläche
@@ -25,10 +25,8 @@
 <br>&nbsp;&nbsp;3.5.2 Implementierung der Anwendung
 <br>&nbsp;&nbsp;3.5.3 Testen von serverless Anwendungen
 <br>3.6 Unterschiede in der Entwicklung
-<br>&nbsp;&nbsp;3.6.1 Implementierungsvorgehen
-<br>&nbsp;&nbsp;3.6.2 Testen der Anwendung
-<br>&nbsp;&nbsp;3.6.3 Deployment der Applikation
-<br>&nbsp;&nbsp;3.6.4 Wechsel zwischen Providern
+<br>&nbsp;&nbsp;3.6.1 Durchführung der Evaluation
+<br>&nbsp;&nbsp;3.6.2 Auswertung der Evaluation
 4. Vergleich der beiden Umsetzungen
 <br>4.1 Vorteile der Serverless-Infrastruktur
 <br>4.2 Nachteile der Serverless-Infrastruktur
