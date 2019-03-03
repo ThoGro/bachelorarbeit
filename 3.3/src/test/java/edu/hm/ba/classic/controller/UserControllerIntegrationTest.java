@@ -26,7 +26,6 @@ public class UserControllerIntegrationTest {
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();
     }
 

@@ -3,7 +3,6 @@ package edu.hm.ba.classic.controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -27,7 +26,6 @@ public class StatisticControllerIntegrationTest {
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();
     }
 

@@ -47,7 +47,6 @@ public class ReturnBookHandler implements RequestHandler<Map<String, Object>, Ga
     public GatewayResponse handleRequest(Map<String, Object> input, Context context) {
         String pathParameter = input.get("pathParameters").toString();
         String isbn = pathParameter.substring(6, pathParameter.length()-1);
-        System.out.println(isbn);
         String returner = bookDao.returnBook(isbn);
         try {
             return new GatewayResponse(objectMapper.writeValueAsString(returner), HEADER, SC_CREATED);
