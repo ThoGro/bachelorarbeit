@@ -11,6 +11,7 @@
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="my-icons.html">
 
 <link rel="lazy-import" href="ba-ausleihe.html">
@@ -107,7 +108,9 @@
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Bibliotheksservice</div>
-            <p>Angemeldet als [[user.username]]</p>
+            <template is="dom-if" if="[[user.username]]">
+              <p>Angemeldet als [[user.username]]</p>
+            </template>
           </app-toolbar>
         </app-header>
 

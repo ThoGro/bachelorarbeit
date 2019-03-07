@@ -1,5 +1,6 @@
 package edu.hm.ba.serverless.dao;
 
+import com.amazonaws.services.lambda.runtime.CognitoIdentity;
 import edu.hm.ba.serverless.exception.*;
 import edu.hm.ba.serverless.model.Book;
 import edu.hm.ba.serverless.model.Category;
@@ -191,12 +192,15 @@ public class BookDao {
     /**
      * Marks a book as lent. After this the lender of the book is set.
      * @param isbn the isbn of the lent book
+     * @param identity the identity of the active user
      * @return the username of the lender
      */
-    public String lendBook(String isbn) {
+    public String lendBook(String isbn, CognitoIdentity identity) {
+        String userId = getUserId(identity);
         Book toLend = getBook(isbn);
         if (toLend != null) {
-            String lender = "TestUser";
+            //aktiven User als Lender eintragen
+            String lender = userId;
             toLend.setLender(lender);
             updateBook(isbn, toLend);
             return lender;
@@ -208,12 +212,13 @@ public class BookDao {
     /**
      * Unmarks a lent book. After this the book is available and the lender of the book is "null".
      * @param isbn the isbn of the returned book
+     * @param identity the identity of the active user
      * @return the username of the returner
      */
-    public String returnBook(String isbn) {
+    public String returnBook(String isbn, CognitoIdentity identity) {
+        String userId = getUserId(identity);
         Book toReturn = getBook(isbn);
-        if (toReturn != null) {
-            //check if lender is active User
+        if (toReturn != null && toReturn.getLender().equals(userId)) {
             String returner = toReturn.getLender();
             toReturn.setLender("null");
             updateBook(isbn, toReturn);
@@ -225,14 +230,16 @@ public class BookDao {
 
     /**
      * Returns all lent books for a specific user.
+     * @param identity the identity of the active user
      * @return list with all lent books
      */
-    public List<Book> getLendings() {
+    public List<Book> getLendings(CognitoIdentity identity) {
+        String userId = getUserId(identity);
         List<Book> books = getBooks();
         List<Book> lendings = new ArrayList<>();
         for (Book book : books) {
             //prüfen, ob aktiver User der Ausleiher ist
-            if (book.getLender().equals("TestUser")) {
+            if (book.getLender().equals(userId)) {
                 lendings.add(book);
             }
         }
@@ -347,6 +354,18 @@ public class BookDao {
             result.add(Character.getNumericValue(c));
         }
         return result;
+    }
+
+    /**
+     * Returns the identity id or a default user id, if no cognito user is set.
+     * @param identity the identity of the active user
+     * @return the identity id or a default user id, if no cognito user is set
+     */
+    private String getUserId(CognitoIdentity identity) {
+        if (identity == null || identity.getIdentityId() == null || identity.getIdentityId().equals("")) {
+            return "TestUser";
+        }
+        return identity.getIdentityId();
     }
 
 }

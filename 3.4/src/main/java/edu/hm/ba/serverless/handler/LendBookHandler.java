@@ -47,7 +47,7 @@ public class LendBookHandler implements RequestHandler<Map<String, Object>, Gate
     public GatewayResponse handleRequest(Map<String, Object> input, Context context) {
         String pathParameter = input.get("pathParameters").toString();
         String isbn = pathParameter.substring(6, pathParameter.length()-1);
-        String lender = bookDao.lendBook(isbn);
+        String lender = bookDao.lendBook(isbn, context.getIdentity());
         try {
             return new GatewayResponse(objectMapper.writeValueAsString(lender), HEADER, SC_CREATED);
         } catch (CouldNotLendBookException | IOException e) {

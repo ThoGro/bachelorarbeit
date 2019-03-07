@@ -46,7 +46,7 @@ public class GetLendingsHandler implements RequestHandler<Map<String, Object>, G
 
     @Override
     public GatewayResponse handleRequest(Map<String, Object> input, Context context) {
-        List<Book> lendings = bookDao.getLendings();
+        List<Book> lendings = bookDao.getLendings(context.getIdentity());
         try {
             return new GatewayResponse(objectMapper.writeValueAsString(lendings), HEADER, SC_OK);
         } catch (JsonProcessingException e) {

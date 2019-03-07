@@ -33,7 +33,7 @@ public class GetBookHandlerTest {
 
     @After
     public void cleanUp() {
-        bookDao.deleteBook("9783868009217");
+        bookDao.deleteBook(BOOK.getIsbn());
     }
 
     @Test
