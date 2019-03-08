@@ -26,5 +26,3 @@ mvnw.cmd
 /dist/
 /nbdist/
 /.nb-gradle/
-
-packaged.yaml
